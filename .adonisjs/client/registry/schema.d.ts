@@ -43,4 +43,136 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['me']>>>
     }
   }
+  'auth.logout': {
+    methods: ["POST"]
+    pattern: '/api/v1/auth/logout'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['logout']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['logout']>>>
+    }
+  }
+  'kelas.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/kelas'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/kelas_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/kelas_controller').default['index']>>>
+    }
+  }
+  'kelas.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/kelas/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/kelas_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/kelas_controller').default['show']>>>
+    }
+  }
+  'kelas.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/kelas'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/kelas_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/kelas_controller').default['store']>>>
+    }
+  }
+  'kelas.update': {
+    methods: ["PUT"]
+    pattern: '/api/v1/kelas/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/kelas_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/kelas_controller').default['update']>>>
+    }
+  }
+  'kelas.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/kelas/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/kelas_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/kelas_controller').default['destroy']>>>
+    }
+  }
+  'siswa.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/siswa'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/siswas_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/siswas_controller').default['index']>>>
+    }
+  }
+  'siswa.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/siswa'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/siswas_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/siswas_controller').default['store']>>>
+    }
+  }
+  'siswa.update': {
+    methods: ["PUT"]
+    pattern: '/api/v1/siswa/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/siswas_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/siswas_controller').default['update']>>>
+    }
+  }
+  'siswa.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/siswa/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/siswas_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/siswas_controller').default['show']>>>
+    }
+  }
+  'siswa.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/siswa/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/siswas_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/siswas_controller').default['destroy']>>>
+    }
+  }
 }

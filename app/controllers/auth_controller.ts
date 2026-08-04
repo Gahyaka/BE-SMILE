@@ -3,8 +3,8 @@ import prisma from '#services/prisma_service'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
-
 const JWT_SECRET = process.env.APP_KEY || 'super-secret-key-min-32-chars-long'
+
 export default class AuthController {
   /**
    * Get semua data user
@@ -26,7 +26,7 @@ export default class AuthController {
         message: 'Berhasil mengambil data user',
         data: users,
       })
-    } catch (error:any) {
+    } catch (error: any) {
       return response.internalServerError({
         success: false,
         message: 'Gagal mengambil data user',
@@ -66,7 +66,7 @@ export default class AuthController {
           username,
           password: hashedPassword,
           nama,
-          role: role || 'GURU', 
+          role: role || 'GURU',
         },
         select: {
           id: true,
@@ -82,7 +82,7 @@ export default class AuthController {
         message: 'Registrasi berhasil',
         data: user,
       })
-    } catch (error:any) {
+    } catch (error: any) {
       return response.internalServerError({
         success: false,
         message: 'Gagal melakukan registrasi',
@@ -146,11 +146,11 @@ export default class AuthController {
           },
         },
       })
-    } catch (error:any) {
+    } catch (error: any) {
       return response.internalServerError({
         success: false,
         message: 'Gagal melakukan login',
-        error: error.message
+        error: error.message,
       })
     }
   }
@@ -159,13 +159,22 @@ export default class AuthController {
    * GET /api/v1/auth/me
    */
   public async me({ request, response }: HttpContext) {
-  // Gunakan type assertion (request as any)
-  const authUser = (request as any).authUser
+    const authUser = (request as any).authUser
 
-  return response.ok({
-    success: true,
-    message: 'Profil user berhasil diambil',
-    data: authUser,
-  })
-}
+    return response.ok({
+      success: true,
+      message: 'Profil user berhasil diambil',
+      data: authUser,
+    })
+  }
+
+  /**
+   * POST /api/v1/auth/logout
+   */
+  public async logout({ response }: HttpContext) {
+    return response.ok({
+      success: true,
+      message: 'Logout berhasil, silakan hapus token dari client',
+    })
+  }
 }

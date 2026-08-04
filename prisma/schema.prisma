@@ -44,6 +44,7 @@ model User {
 model Kelas {
   id          String   @id @default(uuid())
   namaKelas   String   @map("nama_kelas") // misal: "Kelas A - Bintang"
+  waliKelas   String?  @map("wali_kelas")
   tahunAjaran String   @map("tahun_ajaran") // misal: "2025/2026"
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")

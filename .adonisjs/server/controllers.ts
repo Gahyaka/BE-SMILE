@@ -6,6 +6,8 @@
 export const controllers = {
   AccessTokens: () => import('#controllers/access_tokens_controller'),
   Auth: () => import('#controllers/auth_controller'),
+  Kelas: () => import('#controllers/kelas_controller'),
   NewAccount: () => import('#controllers/new_account_controller'),
   Profile: () => import('#controllers/profile_controller'),
+  Siswas: () => import('#controllers/siswas_controller'),
 }
