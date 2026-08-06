@@ -7,18 +7,6 @@ import type { InferInput, SimpleError } from '@vinejs/vine/types'
 export type ParamValue = string | number | bigint | boolean
 
 export interface Registry {
-  'auth.register': {
-    methods: ["POST"]
-    pattern: '/api/v1/auth/register'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['register']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['register']>>>
-    }
-  }
   'auth.login': {
     methods: ["POST"]
     pattern: '/api/v1/auth/login'
@@ -43,6 +31,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['me']>>>
     }
   }
+  'auth.change_password': {
+    methods: ["PUT"]
+    pattern: '/api/v1/auth/change-password'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['changePassword']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['changePassword']>>>
+    }
+  }
   'auth.logout': {
     methods: ["POST"]
     pattern: '/api/v1/auth/logout'
@@ -55,6 +55,42 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['logout']>>>
     }
   }
+  'siswa.me': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/siswa/me'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/siswas_controller').default['me']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/siswas_controller').default['me']>>>
+    }
+  }
+  'auth.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/users'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['index']>>>
+    }
+  }
+  'auth.register': {
+    methods: ["POST"]
+    pattern: '/api/v1/auth/register'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['register']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['register']>>>
+    }
+  }
   'kelas.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/kelas'
@@ -65,6 +101,30 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/kelas_controller').default['index']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/kelas_controller').default['index']>>>
+    }
+  }
+  'siswa.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/siswa'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/siswas_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/siswas_controller').default['index']>>>
+    }
+  }
+  'siswa.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/siswa/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/siswas_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/siswas_controller').default['show']>>>
     }
   }
   'kelas.show': {
@@ -115,18 +175,6 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/kelas_controller').default['destroy']>>>
     }
   }
-  'siswa.index': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/siswa'
-    types: {
-      body: {}
-      paramsTuple: []
-      params: {}
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/siswas_controller').default['index']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/siswas_controller').default['index']>>>
-    }
-  }
   'siswa.store': {
     methods: ["POST"]
     pattern: '/api/v1/siswa'
@@ -151,18 +199,6 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/siswas_controller').default['update']>>>
     }
   }
-  'siswa.show': {
-    methods: ["GET","HEAD"]
-    pattern: '/api/v1/siswa/:id'
-    types: {
-      body: {}
-      paramsTuple: [ParamValue]
-      params: { id: ParamValue }
-      query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#controllers/siswas_controller').default['show']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/siswas_controller').default['show']>>>
-    }
-  }
   'siswa.destroy': {
     methods: ["DELETE"]
     pattern: '/api/v1/siswa/:id'
@@ -173,6 +209,18 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/siswas_controller').default['destroy']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/siswas_controller').default['destroy']>>>
+    }
+  }
+  'auth.reset_password': {
+    methods: ["PUT"]
+    pattern: '/api/v1/users/:id/reset-password'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['resetPassword']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['resetPassword']>>>
     }
   }
 }

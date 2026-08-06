@@ -177,4 +177,104 @@ export default class AuthController {
       message: 'Logout berhasil, silakan hapus token dari client',
     })
   }
+  /**
+ * PUT /api/v1/auth/change-password
+ */
+  public async changePassword({ request, response }: HttpContext) {
+    try {
+      const authUser = (request as any).authUser
+      const { oldPassword, newPassword } = request.only(['oldPassword', 'newPassword'])
+
+      if (!oldPassword || !newPassword) {
+        return response.badRequest({
+          success: false,
+          message: 'Password lama dan password baru wajib diisi',
+        })
+      }
+
+      // Ambil data user dari DB
+      const user = await prisma.user.findUnique({
+        where: { id: authUser.id },
+      })
+
+      if (!user) {
+        return response.notFound({ success: false, message: 'User tidak ditemukan' })
+      }
+
+      // Validasi password lama
+      const isOldPasswordValid = await bcrypt.compare(oldPassword, user.password)
+      if (!isOldPasswordValid) {
+        return response.badRequest({
+          success: false,
+          message: 'Password lama tidak sesuai',
+        })
+      }
+
+      // Hash password baru dan update DB
+      const hashedNewPassword = await bcrypt.hash(newPassword, 10)
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { password: hashedNewPassword },
+      })
+
+      return response.ok({
+        success: true,
+        message: 'Password berhasil diperbarui',
+      })
+    } catch (error: any) {
+      return response.internalServerError({
+        success: false,
+        message: 'Gagal memperbarui password',
+        error: error.message,
+      })
+    }
+  }
+  /**
+ * PUT /api/v1/users/:id/reset-password
+ * Khusus ADMIN_ADMINISTRASI untuk mereset/mengubah password user lain
+ */
+public async resetPassword({ params, request, response }: HttpContext) {
+  try {
+    const { newPassword } = request.only(['newPassword'])
+
+    if (!newPassword || newPassword.length < 6) {
+      return response.badRequest({
+        success: false,
+        message: 'Password baru wajib diisi dan minimal 6 karakter',
+      })
+    }
+
+    // Cek keberadaan user target
+    const targetUser = await prisma.user.findUnique({
+      where: { id: params.id },
+    })
+
+    if (!targetUser) {
+      return response.notFound({
+        success: false,
+        message: 'User tidak ditemukan',
+      })
+    }
+
+    // Hash password baru
+    const hashedPassword = await bcrypt.hash(newPassword, 10)
+
+    // Update password di database
+    await prisma.user.update({
+      where: { id: params.id },
+      data: { password: hashedPassword },
+    })
+
+    return response.ok({
+      success: true,
+      message: `Berhasil mengubah password untuk user @${targetUser.username}`,
+    })
+  } catch (error: any) {
+    return response.internalServerError({
+      success: false,
+      message: 'Gagal mereset password user',
+      error: error.message,
+    })
+  }
+}
 }
