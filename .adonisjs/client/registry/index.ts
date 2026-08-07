@@ -72,6 +72,12 @@ const routes = {
     tokens: [{"old":"/api/v1/kelas/:id","type":0,"val":"api","end":""},{"old":"/api/v1/kelas/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/kelas/:id","type":0,"val":"kelas","end":""},{"old":"/api/v1/kelas/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['kelas.show']['types'],
   },
+  'pembayaran_spp_les.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/pembayaran-spp-les',
+    tokens: [{"old":"/api/v1/pembayaran-spp-les","type":0,"val":"api","end":""},{"old":"/api/v1/pembayaran-spp-les","type":0,"val":"v1","end":""},{"old":"/api/v1/pembayaran-spp-les","type":0,"val":"pembayaran-spp-les","end":""}],
+    types: placeholder as Registry['pembayaran_spp_les.index']['types'],
+  },
   'kelas.store': {
     methods: ["POST"],
     pattern: '/api/v1/kelas',
@@ -113,6 +119,30 @@ const routes = {
     pattern: '/api/v1/users/:id/reset-password',
     tokens: [{"old":"/api/v1/users/:id/reset-password","type":0,"val":"api","end":""},{"old":"/api/v1/users/:id/reset-password","type":0,"val":"v1","end":""},{"old":"/api/v1/users/:id/reset-password","type":0,"val":"users","end":""},{"old":"/api/v1/users/:id/reset-password","type":1,"val":"id","end":""},{"old":"/api/v1/users/:id/reset-password","type":0,"val":"reset-password","end":""}],
     types: placeholder as Registry['auth.reset_password']['types'],
+  },
+  'pembayaran_spp_les.store': {
+    methods: ["POST"],
+    pattern: '/api/v1/pembayaran-spp-les',
+    tokens: [{"old":"/api/v1/pembayaran-spp-les","type":0,"val":"api","end":""},{"old":"/api/v1/pembayaran-spp-les","type":0,"val":"v1","end":""},{"old":"/api/v1/pembayaran-spp-les","type":0,"val":"pembayaran-spp-les","end":""}],
+    types: placeholder as Registry['pembayaran_spp_les.store']['types'],
+  },
+  'pembayaran_spp_les.update': {
+    methods: ["PUT"],
+    pattern: '/api/v1/pembayaran-spp-les/:id',
+    tokens: [{"old":"/api/v1/pembayaran-spp-les/:id","type":0,"val":"api","end":""},{"old":"/api/v1/pembayaran-spp-les/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/pembayaran-spp-les/:id","type":0,"val":"pembayaran-spp-les","end":""},{"old":"/api/v1/pembayaran-spp-les/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['pembayaran_spp_les.update']['types'],
+  },
+  'pembayaran_spp_les.restore': {
+    methods: ["PUT"],
+    pattern: '/api/v1/pembayaran-spp-les/:id/restore',
+    tokens: [{"old":"/api/v1/pembayaran-spp-les/:id/restore","type":0,"val":"api","end":""},{"old":"/api/v1/pembayaran-spp-les/:id/restore","type":0,"val":"v1","end":""},{"old":"/api/v1/pembayaran-spp-les/:id/restore","type":0,"val":"pembayaran-spp-les","end":""},{"old":"/api/v1/pembayaran-spp-les/:id/restore","type":1,"val":"id","end":""},{"old":"/api/v1/pembayaran-spp-les/:id/restore","type":0,"val":"restore","end":""}],
+    types: placeholder as Registry['pembayaran_spp_les.restore']['types'],
+  },
+  'pembayaran_spp_les.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/v1/pembayaran-spp-les/:id',
+    tokens: [{"old":"/api/v1/pembayaran-spp-les/:id","type":0,"val":"api","end":""},{"old":"/api/v1/pembayaran-spp-les/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/pembayaran-spp-les/:id","type":0,"val":"pembayaran-spp-les","end":""},{"old":"/api/v1/pembayaran-spp-les/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['pembayaran_spp_les.destroy']['types'],
   },
 } as const satisfies Record<string, AdonisEndpoint>
 

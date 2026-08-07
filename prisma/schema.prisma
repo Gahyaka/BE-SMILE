@@ -23,8 +23,9 @@ enum JenisTabungan {
 
 // Status Pembayaran SPP (Manual)
 enum StatusBayar {
-  LUM_LUNAS
+  BELUM_LUNAS
   LUNAS
+  BATAL
 }
 
 model User {
@@ -75,22 +76,37 @@ model Siswa {
   @@map("siswa")
 }
 
-model TransaksiSpp {
-  id            String      @id @default(uuid())
-  nomorKwitansi String      @unique @map("nomor_kwitansi") // Misal: KW-SPP-202607-001
-  siswaId       String      @map("siswa_id")
-  bulan         Int // 1 - 12
-  tahun         Int // e.g. 2026
-  nominal       Decimal     @db.Decimal(12, 2)
-  status        StatusBayar @default(LUM_LUNAS)
-  tanggalBayar  DateTime?   @map("tanggal_bayar")
-  petugasId     String?     @map("petugas_id") // Siapa admin/guru yang mencatat
-  catatan       String?
-  createdAt     DateTime    @default(now()) @map("created_at")
-  updatedAt     DateTime    @updatedAt @map("updated_at")
+enum StatusSetoran {
+  SUDAH
+  BELUM 
+}
 
-  siswa   Siswa @relation(fields: [siswaId], references: [id], onDelete: Cascade)
-  petugas User? @relation(fields: [petugasId], references: [id], onDelete: SetNull)
+model TransaksiSpp {
+  id            String        @id @default(uuid())
+  nomorKwitansi String?       @unique @map("nomor_kwitansi")
+  siswaId       String        @map("siswa_id")
+  
+  bulan         Int?          // Opsional jika bayar berdasarkan tanggal
+  tahun         Int?          // e.g. 2026
+  
+  // Field Rincian Pembayaran
+  nominalSpp    Decimal       @default(0) @map("nominal_spp") @db.Decimal(12, 2)
+  nominalLes    Decimal       @default(0) @map("nominal_les") @db.Decimal(12, 2)
+  totalBayar    Decimal       @map("total_bayar") @db.Decimal(12, 2)
+  
+  status        StatusBayar   @default(LUNAS)
+  statusSetoran StatusSetoran @default(BELUM) @map("status_setoran") 
+  tanggalBayar  DateTime      @default(now()) @map("tanggal_bayar")
+  
+  petugasId     String?       @map("petugas_id")
+  catatan       String?       @db.Text
+
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+  deletedAt     DateTime?     @map("deleted_at")
+
+  siswa         Siswa         @relation(fields: [siswaId], references: [id], onDelete: Cascade)
+  petugas       User?         @relation(fields: [petugasId], references: [id], onDelete: SetNull)
 
   @@map("transaksi_spp")
 }

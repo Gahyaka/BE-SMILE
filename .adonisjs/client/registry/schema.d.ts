@@ -139,6 +139,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/kelas_controller').default['show']>>>
     }
   }
+  'pembayaran_spp_les.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/pembayaran-spp-les'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/pembayaran_spp_les_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/pembayaran_spp_les_controller').default['index']>>>
+    }
+  }
   'kelas.store': {
     methods: ["POST"]
     pattern: '/api/v1/kelas'
@@ -221,6 +233,54 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['resetPassword']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['resetPassword']>>>
+    }
+  }
+  'pembayaran_spp_les.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/pembayaran-spp-les'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/pembayaran_spp_les_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/pembayaran_spp_les_controller').default['store']>>>
+    }
+  }
+  'pembayaran_spp_les.update': {
+    methods: ["PUT"]
+    pattern: '/api/v1/pembayaran-spp-les/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/pembayaran_spp_les_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/pembayaran_spp_les_controller').default['update']>>>
+    }
+  }
+  'pembayaran_spp_les.restore': {
+    methods: ["PUT"]
+    pattern: '/api/v1/pembayaran-spp-les/:id/restore'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/pembayaran_spp_les_controller').default['restore']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/pembayaran_spp_les_controller').default['restore']>>>
+    }
+  }
+  'pembayaran_spp_les.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/pembayaran-spp-les/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/pembayaran_spp_les_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/pembayaran_spp_les_controller').default['destroy']>>>
     }
   }
 }
