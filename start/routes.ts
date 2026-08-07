@@ -4,6 +4,7 @@ import { middleware } from '#start/kernel'
 const AuthController = () => import('#controllers/auth_controller')
 const KelasController = () => import('#controllers/kelas_controller')
 const SiswaController = () => import('#controllers/siswas_controller')
+const PembayaranSppLesController = () => import('#controllers/pembayaran_spp_les_controller')
 
 router.group(() => {
   // Public Routes
@@ -34,6 +35,8 @@ router.group(() => {
       router.get('/siswa', [SiswaController, 'index'])
       router.get('/siswa/:id', [SiswaController, 'show'])
       router.get('/kelas/:id', [KelasController, 'show'])
+
+      router.get('/pembayaran-spp-les', [PembayaranSppLesController, 'index'])
   }).use(middleware.role({ roles: ['ADMIN_ADMINISTRASI', 'ADMIN_TRANSAKSI', 'GURU'] }))
       
 // Write / Mutation: Cuma ADMIN_ADMINISTRASI
@@ -48,6 +51,13 @@ router.group(() => {
 
       router.put('/users/:id/reset-password', [AuthController, 'resetPassword'])
     }).use(middleware.role({ roles: ['ADMIN_ADMINISTRASI'] }))
+
+      router.group(() => {
+      router.post('/pembayaran-spp-les', [PembayaranSppLesController, 'store'])
+      router.put('/pembayaran-spp-les/:id', [PembayaranSppLesController, 'update'])
+      router.put('/pembayaran-spp-les/:id/restore', [PembayaranSppLesController, 'restore'])
+      router.delete('/pembayaran-spp-les/:id', [PembayaranSppLesController, 'destroy'])
+    }).use(middleware.role({ roles: ['ADMIN_TRANSAKSI', 'ADMIN_ADMINISTRASI'] }))
 
   }).use(middleware.auth())
 

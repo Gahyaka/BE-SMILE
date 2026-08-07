@@ -15,6 +15,7 @@ export type ScannedRoutes = {
     'siswa.index': { paramsTuple?: []; params?: {} }
     'siswa.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'kelas.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'pembayaran_spp_les.index': { paramsTuple?: []; params?: {} }
     'kelas.store': { paramsTuple?: []; params?: {} }
     'kelas.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'kelas.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -22,6 +23,10 @@ export type ScannedRoutes = {
     'siswa.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'siswa.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'auth.reset_password': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'pembayaran_spp_les.store': { paramsTuple?: []; params?: {} }
+    'pembayaran_spp_les.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'pembayaran_spp_les.restore': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'pembayaran_spp_les.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   POST: {
     'auth.login': { paramsTuple?: []; params?: {} }
@@ -29,6 +34,7 @@ export type ScannedRoutes = {
     'auth.register': { paramsTuple?: []; params?: {} }
     'kelas.store': { paramsTuple?: []; params?: {} }
     'siswa.store': { paramsTuple?: []; params?: {} }
+    'pembayaran_spp_les.store': { paramsTuple?: []; params?: {} }
   }
   GET: {
     'auth.me': { paramsTuple?: []; params?: {} }
@@ -38,6 +44,7 @@ export type ScannedRoutes = {
     'siswa.index': { paramsTuple?: []; params?: {} }
     'siswa.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'kelas.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'pembayaran_spp_les.index': { paramsTuple?: []; params?: {} }
   }
   HEAD: {
     'auth.me': { paramsTuple?: []; params?: {} }
@@ -47,16 +54,20 @@ export type ScannedRoutes = {
     'siswa.index': { paramsTuple?: []; params?: {} }
     'siswa.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'kelas.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'pembayaran_spp_les.index': { paramsTuple?: []; params?: {} }
   }
   PUT: {
     'auth.change_password': { paramsTuple?: []; params?: {} }
     'kelas.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'siswa.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'auth.reset_password': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'pembayaran_spp_les.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'pembayaran_spp_les.restore': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   DELETE: {
     'kelas.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'siswa.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'pembayaran_spp_les.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {

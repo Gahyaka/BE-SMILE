@@ -26,4 +26,11 @@ export interface ApiDefinition {
     update: typeof routes['kelas.update']
     destroy: typeof routes['kelas.destroy']
   }
+  pembayaranSppLes: {
+    index: typeof routes['pembayaran_spp_les.index']
+    store: typeof routes['pembayaran_spp_les.store']
+    update: typeof routes['pembayaran_spp_les.update']
+    restore: typeof routes['pembayaran_spp_les.restore']
+    destroy: typeof routes['pembayaran_spp_les.destroy']
+  }
 }
