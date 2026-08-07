@@ -6,12 +6,6 @@ import type { ApiDefinition } from './tree.d.ts'
 const placeholder: any = {}
 
 const routes = {
-  'auth.register': {
-    methods: ["POST"],
-    pattern: '/api/v1/auth/register',
-    tokens: [{"old":"/api/v1/auth/register","type":0,"val":"api","end":""},{"old":"/api/v1/auth/register","type":0,"val":"v1","end":""},{"old":"/api/v1/auth/register","type":0,"val":"auth","end":""},{"old":"/api/v1/auth/register","type":0,"val":"register","end":""}],
-    types: placeholder as Registry['auth.register']['types'],
-  },
   'auth.login': {
     methods: ["POST"],
     pattern: '/api/v1/auth/login',
@@ -24,17 +18,53 @@ const routes = {
     tokens: [{"old":"/api/v1/auth/me","type":0,"val":"api","end":""},{"old":"/api/v1/auth/me","type":0,"val":"v1","end":""},{"old":"/api/v1/auth/me","type":0,"val":"auth","end":""},{"old":"/api/v1/auth/me","type":0,"val":"me","end":""}],
     types: placeholder as Registry['auth.me']['types'],
   },
+  'auth.change_password': {
+    methods: ["PUT"],
+    pattern: '/api/v1/auth/change-password',
+    tokens: [{"old":"/api/v1/auth/change-password","type":0,"val":"api","end":""},{"old":"/api/v1/auth/change-password","type":0,"val":"v1","end":""},{"old":"/api/v1/auth/change-password","type":0,"val":"auth","end":""},{"old":"/api/v1/auth/change-password","type":0,"val":"change-password","end":""}],
+    types: placeholder as Registry['auth.change_password']['types'],
+  },
   'auth.logout': {
     methods: ["POST"],
     pattern: '/api/v1/auth/logout',
     tokens: [{"old":"/api/v1/auth/logout","type":0,"val":"api","end":""},{"old":"/api/v1/auth/logout","type":0,"val":"v1","end":""},{"old":"/api/v1/auth/logout","type":0,"val":"auth","end":""},{"old":"/api/v1/auth/logout","type":0,"val":"logout","end":""}],
     types: placeholder as Registry['auth.logout']['types'],
   },
+  'siswa.me': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/siswa/me',
+    tokens: [{"old":"/api/v1/siswa/me","type":0,"val":"api","end":""},{"old":"/api/v1/siswa/me","type":0,"val":"v1","end":""},{"old":"/api/v1/siswa/me","type":0,"val":"siswa","end":""},{"old":"/api/v1/siswa/me","type":0,"val":"me","end":""}],
+    types: placeholder as Registry['siswa.me']['types'],
+  },
+  'auth.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/users',
+    tokens: [{"old":"/api/v1/users","type":0,"val":"api","end":""},{"old":"/api/v1/users","type":0,"val":"v1","end":""},{"old":"/api/v1/users","type":0,"val":"users","end":""}],
+    types: placeholder as Registry['auth.index']['types'],
+  },
+  'auth.register': {
+    methods: ["POST"],
+    pattern: '/api/v1/auth/register',
+    tokens: [{"old":"/api/v1/auth/register","type":0,"val":"api","end":""},{"old":"/api/v1/auth/register","type":0,"val":"v1","end":""},{"old":"/api/v1/auth/register","type":0,"val":"auth","end":""},{"old":"/api/v1/auth/register","type":0,"val":"register","end":""}],
+    types: placeholder as Registry['auth.register']['types'],
+  },
   'kelas.index': {
     methods: ["GET","HEAD"],
     pattern: '/api/v1/kelas',
     tokens: [{"old":"/api/v1/kelas","type":0,"val":"api","end":""},{"old":"/api/v1/kelas","type":0,"val":"v1","end":""},{"old":"/api/v1/kelas","type":0,"val":"kelas","end":""}],
     types: placeholder as Registry['kelas.index']['types'],
+  },
+  'siswa.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/siswa',
+    tokens: [{"old":"/api/v1/siswa","type":0,"val":"api","end":""},{"old":"/api/v1/siswa","type":0,"val":"v1","end":""},{"old":"/api/v1/siswa","type":0,"val":"siswa","end":""}],
+    types: placeholder as Registry['siswa.index']['types'],
+  },
+  'siswa.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/siswa/:id',
+    tokens: [{"old":"/api/v1/siswa/:id","type":0,"val":"api","end":""},{"old":"/api/v1/siswa/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/siswa/:id","type":0,"val":"siswa","end":""},{"old":"/api/v1/siswa/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['siswa.show']['types'],
   },
   'kelas.show': {
     methods: ["GET","HEAD"],
@@ -60,12 +90,6 @@ const routes = {
     tokens: [{"old":"/api/v1/kelas/:id","type":0,"val":"api","end":""},{"old":"/api/v1/kelas/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/kelas/:id","type":0,"val":"kelas","end":""},{"old":"/api/v1/kelas/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['kelas.destroy']['types'],
   },
-  'siswa.index': {
-    methods: ["GET","HEAD"],
-    pattern: '/api/v1/siswa',
-    tokens: [{"old":"/api/v1/siswa","type":0,"val":"api","end":""},{"old":"/api/v1/siswa","type":0,"val":"v1","end":""},{"old":"/api/v1/siswa","type":0,"val":"siswa","end":""}],
-    types: placeholder as Registry['siswa.index']['types'],
-  },
   'siswa.store': {
     methods: ["POST"],
     pattern: '/api/v1/siswa',
@@ -78,17 +102,17 @@ const routes = {
     tokens: [{"old":"/api/v1/siswa/:id","type":0,"val":"api","end":""},{"old":"/api/v1/siswa/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/siswa/:id","type":0,"val":"siswa","end":""},{"old":"/api/v1/siswa/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['siswa.update']['types'],
   },
-  'siswa.show': {
-    methods: ["GET","HEAD"],
-    pattern: '/api/v1/siswa/:id',
-    tokens: [{"old":"/api/v1/siswa/:id","type":0,"val":"api","end":""},{"old":"/api/v1/siswa/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/siswa/:id","type":0,"val":"siswa","end":""},{"old":"/api/v1/siswa/:id","type":1,"val":"id","end":""}],
-    types: placeholder as Registry['siswa.show']['types'],
-  },
   'siswa.destroy': {
     methods: ["DELETE"],
     pattern: '/api/v1/siswa/:id',
     tokens: [{"old":"/api/v1/siswa/:id","type":0,"val":"api","end":""},{"old":"/api/v1/siswa/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/siswa/:id","type":0,"val":"siswa","end":""},{"old":"/api/v1/siswa/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['siswa.destroy']['types'],
+  },
+  'auth.reset_password': {
+    methods: ["PUT"],
+    pattern: '/api/v1/users/:id/reset-password',
+    tokens: [{"old":"/api/v1/users/:id/reset-password","type":0,"val":"api","end":""},{"old":"/api/v1/users/:id/reset-password","type":0,"val":"v1","end":""},{"old":"/api/v1/users/:id/reset-password","type":0,"val":"users","end":""},{"old":"/api/v1/users/:id/reset-password","type":1,"val":"id","end":""},{"old":"/api/v1/users/:id/reset-password","type":0,"val":"reset-password","end":""}],
+    types: placeholder as Registry['auth.reset_password']['types'],
   },
 } as const satisfies Record<string, AdonisEndpoint>
 

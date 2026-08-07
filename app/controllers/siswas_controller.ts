@@ -1,7 +1,57 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import prisma from '#services/prisma_service'
+import bcrypt from 'bcryptjs'
+
+function generateRandomPassword(length = 6): string {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+  let result = ''
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length))
+  }
+  return result
+}
 
 export default class SiswaController {
+    /**
+   * GET /api/v1/siswa/me
+   * Mengambil data siswa milik user yang sedang login
+   */
+  public async me({ request, response }: HttpContext) {
+    try {
+      const authUser = (request as any).authUser
+
+      // Cari data user beserta data siswanya
+      const userWithSiswa = await prisma.user.findUnique({
+        where: { id: authUser.id },
+        include: {
+          siswa: {
+            include: {
+              kelas: true, 
+            },
+          },
+        },
+      })
+
+      if (!userWithSiswa || !userWithSiswa.siswa) {
+        return response.notFound({
+          success: false,
+          message: 'Data siswa untuk akun ini belum dikaitkan',
+        })
+      }
+
+      return response.ok({
+        success: true,
+        message: 'Berhasil mengambil data siswa profil',
+        data: userWithSiswa.siswa,
+      })
+    } catch (error: any) {
+      return response.internalServerError({
+        success: false,
+        message: 'Gagal mengambil data siswa',
+        error: error.message,
+      })
+    }
+  }
   /**
    * GET /api/v1/siswa (Get All Siswa)
    */
@@ -86,10 +136,44 @@ export default class SiswaController {
         },
       })
 
+      const username = nis
+        ? `siswa_${nis}`
+        : `siswa_${newSiswa.id.replace(/-/g, '').slice(0, 6)}`
+
+      // Password Default: 'Paud@' + NIS (jika ada NIS) ATAU Random Password
+      const plainPassword = nis ? `Paud@${nis}` : generateRandomPassword(6)
+
+      // Hash Password
+      const hashedPassword = await bcrypt.hash(plainPassword, 10)
+
+      //Otomatis Buat Akun User untuk Siswa ini
+      const newUser = await prisma.user.create({
+        data: {
+          username,
+          password: hashedPassword,
+          nama: namaLengkap,
+          role: 'SISWA',
+          siswaId: newSiswa.id, // Relasikan ke Siswa yang baru dibuat
+        },
+        select: {
+          id: true,
+          username: true,
+          role: true,
+        },
+      })
+
       return response.created({
         success: true,
-        message: 'Berhasil menambahkan data siswa',
-        data: newSiswa,
+        message: 'Berhasil menambahkan data dan membuat akun siswa',
+        data: {
+          siswa: newSiswa,
+          account: {
+            userId: newUser.id,
+            username: newUser.username,
+            defaultPassword: plainPassword,
+            role: newUser.role,
+          },
+        },
       })
     } catch (error: any) {
       return response.internalServerError({
