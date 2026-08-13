@@ -11,4 +11,5 @@ export const controllers = {
   PembayaranSppLes: () => import('#controllers/pembayaran_spp_les_controller'),
   Profile: () => import('#controllers/profile_controller'),
   Siswas: () => import('#controllers/siswas_controller'),
+  Tabungan: () => import('#controllers/tabungan_controller'),
 }
