@@ -11,6 +11,17 @@ export interface ApiDefinition {
     register: typeof routes['auth.register']
     resetPassword: typeof routes['auth.reset_password']
   }
+  murojaah: {
+    getMasterData: typeof routes['murojaah.get_master_data']
+    getNilaiSiswa: typeof routes['murojaah.get_nilai_siswa']
+    storeKategori: typeof routes['murojaah.store_kategori']
+    updateKategori: typeof routes['murojaah.update_kategori']
+    destroyKategori: typeof routes['murojaah.destroy_kategori']
+    storeMateri: typeof routes['murojaah.store_materi']
+    updateMateri: typeof routes['murojaah.update_materi']
+    destroyMateri: typeof routes['murojaah.destroy_materi']
+    saveNilai: typeof routes['murojaah.save_nilai']
+  }
   siswa: {
     me: typeof routes['siswa.me']
     index: typeof routes['siswa.index']

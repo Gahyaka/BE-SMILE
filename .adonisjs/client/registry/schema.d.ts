@@ -55,6 +55,30 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['logout']>>>
     }
   }
+  'murojaah.get_master_data': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/murojaah/kategori'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/murojaah_controller').default['getMasterData']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/murojaah_controller').default['getMasterData']>>>
+    }
+  }
+  'murojaah.get_nilai_siswa': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/murojaah/siswa/:siswaId'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { siswaId: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/murojaah_controller').default['getNilaiSiswa']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/murojaah_controller').default['getNilaiSiswa']>>>
+    }
+  }
   'siswa.me': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/siswa/me'
@@ -149,6 +173,90 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/pembayaran_spp_les_controller').default['index']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/pembayaran_spp_les_controller').default['index']>>>
+    }
+  }
+  'murojaah.store_kategori': {
+    methods: ["POST"]
+    pattern: '/api/v1/murojaah/kategori'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/murojaah_controller').default['storeKategori']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/murojaah_controller').default['storeKategori']>>>
+    }
+  }
+  'murojaah.update_kategori': {
+    methods: ["PUT"]
+    pattern: '/api/v1/murojaah/kategori/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/murojaah_controller').default['updateKategori']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/murojaah_controller').default['updateKategori']>>>
+    }
+  }
+  'murojaah.destroy_kategori': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/murojaah/kategori/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/murojaah_controller').default['destroyKategori']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/murojaah_controller').default['destroyKategori']>>>
+    }
+  }
+  'murojaah.store_materi': {
+    methods: ["POST"]
+    pattern: '/api/v1/murojaah/materi'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/murojaah_controller').default['storeMateri']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/murojaah_controller').default['storeMateri']>>>
+    }
+  }
+  'murojaah.update_materi': {
+    methods: ["PUT"]
+    pattern: '/api/v1/murojaah/materi/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/murojaah_controller').default['updateMateri']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/murojaah_controller').default['updateMateri']>>>
+    }
+  }
+  'murojaah.destroy_materi': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/murojaah/materi/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/murojaah_controller').default['destroyMateri']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/murojaah_controller').default['destroyMateri']>>>
+    }
+  }
+  'murojaah.save_nilai': {
+    methods: ["POST"]
+    pattern: '/api/v1/murojaah/penilaian'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/murojaah_controller').default['saveNilai']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/murojaah_controller').default['saveNilai']>>>
     }
   }
   'kelas.store': {

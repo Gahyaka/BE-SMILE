@@ -7,6 +7,7 @@ export const controllers = {
   AccessTokens: () => import('#controllers/access_tokens_controller'),
   Auth: () => import('#controllers/auth_controller'),
   Kelas: () => import('#controllers/kelas_controller'),
+  Murojaah: () => import('#controllers/murojaah_controller'),
   NewAccount: () => import('#controllers/new_account_controller'),
   PembayaranSppLes: () => import('#controllers/pembayaran_spp_les_controller'),
   Profile: () => import('#controllers/profile_controller'),

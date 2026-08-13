@@ -8,6 +8,8 @@ export type ScannedRoutes = {
     'auth.me': { paramsTuple?: []; params?: {} }
     'auth.change_password': { paramsTuple?: []; params?: {} }
     'auth.logout': { paramsTuple?: []; params?: {} }
+    'murojaah.get_master_data': { paramsTuple?: []; params?: {} }
+    'murojaah.get_nilai_siswa': { paramsTuple: [ParamValue]; params: {'siswaId': ParamValue} }
     'siswa.me': { paramsTuple?: []; params?: {} }
     'auth.index': { paramsTuple?: []; params?: {} }
     'auth.register': { paramsTuple?: []; params?: {} }
@@ -16,6 +18,13 @@ export type ScannedRoutes = {
     'siswa.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'kelas.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'pembayaran_spp_les.index': { paramsTuple?: []; params?: {} }
+    'murojaah.store_kategori': { paramsTuple?: []; params?: {} }
+    'murojaah.update_kategori': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'murojaah.destroy_kategori': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'murojaah.store_materi': { paramsTuple?: []; params?: {} }
+    'murojaah.update_materi': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'murojaah.destroy_materi': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'murojaah.save_nilai': { paramsTuple?: []; params?: {} }
     'kelas.store': { paramsTuple?: []; params?: {} }
     'kelas.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'kelas.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -37,6 +46,9 @@ export type ScannedRoutes = {
     'auth.login': { paramsTuple?: []; params?: {} }
     'auth.logout': { paramsTuple?: []; params?: {} }
     'auth.register': { paramsTuple?: []; params?: {} }
+    'murojaah.store_kategori': { paramsTuple?: []; params?: {} }
+    'murojaah.store_materi': { paramsTuple?: []; params?: {} }
+    'murojaah.save_nilai': { paramsTuple?: []; params?: {} }
     'kelas.store': { paramsTuple?: []; params?: {} }
     'siswa.store': { paramsTuple?: []; params?: {} }
     'pembayaran_spp_les.store': { paramsTuple?: []; params?: {} }
@@ -44,6 +56,8 @@ export type ScannedRoutes = {
   }
   GET: {
     'auth.me': { paramsTuple?: []; params?: {} }
+    'murojaah.get_master_data': { paramsTuple?: []; params?: {} }
+    'murojaah.get_nilai_siswa': { paramsTuple: [ParamValue]; params: {'siswaId': ParamValue} }
     'siswa.me': { paramsTuple?: []; params?: {} }
     'auth.index': { paramsTuple?: []; params?: {} }
     'kelas.index': { paramsTuple?: []; params?: {} }
@@ -56,6 +70,8 @@ export type ScannedRoutes = {
   }
   HEAD: {
     'auth.me': { paramsTuple?: []; params?: {} }
+    'murojaah.get_master_data': { paramsTuple?: []; params?: {} }
+    'murojaah.get_nilai_siswa': { paramsTuple: [ParamValue]; params: {'siswaId': ParamValue} }
     'siswa.me': { paramsTuple?: []; params?: {} }
     'auth.index': { paramsTuple?: []; params?: {} }
     'kelas.index': { paramsTuple?: []; params?: {} }
@@ -68,6 +84,8 @@ export type ScannedRoutes = {
   }
   PUT: {
     'auth.change_password': { paramsTuple?: []; params?: {} }
+    'murojaah.update_kategori': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'murojaah.update_materi': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'kelas.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'siswa.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'auth.reset_password': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -76,6 +94,8 @@ export type ScannedRoutes = {
     'tabungan.restore_mutasi': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   DELETE: {
+    'murojaah.destroy_kategori': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'murojaah.destroy_materi': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'kelas.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'siswa.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'pembayaran_spp_les.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }

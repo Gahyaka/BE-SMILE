@@ -30,6 +30,18 @@ const routes = {
     tokens: [{"old":"/api/v1/auth/logout","type":0,"val":"api","end":""},{"old":"/api/v1/auth/logout","type":0,"val":"v1","end":""},{"old":"/api/v1/auth/logout","type":0,"val":"auth","end":""},{"old":"/api/v1/auth/logout","type":0,"val":"logout","end":""}],
     types: placeholder as Registry['auth.logout']['types'],
   },
+  'murojaah.get_master_data': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/murojaah/kategori',
+    tokens: [{"old":"/api/v1/murojaah/kategori","type":0,"val":"api","end":""},{"old":"/api/v1/murojaah/kategori","type":0,"val":"v1","end":""},{"old":"/api/v1/murojaah/kategori","type":0,"val":"murojaah","end":""},{"old":"/api/v1/murojaah/kategori","type":0,"val":"kategori","end":""}],
+    types: placeholder as Registry['murojaah.get_master_data']['types'],
+  },
+  'murojaah.get_nilai_siswa': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/murojaah/siswa/:siswaId',
+    tokens: [{"old":"/api/v1/murojaah/siswa/:siswaId","type":0,"val":"api","end":""},{"old":"/api/v1/murojaah/siswa/:siswaId","type":0,"val":"v1","end":""},{"old":"/api/v1/murojaah/siswa/:siswaId","type":0,"val":"murojaah","end":""},{"old":"/api/v1/murojaah/siswa/:siswaId","type":0,"val":"siswa","end":""},{"old":"/api/v1/murojaah/siswa/:siswaId","type":1,"val":"siswaId","end":""}],
+    types: placeholder as Registry['murojaah.get_nilai_siswa']['types'],
+  },
   'siswa.me': {
     methods: ["GET","HEAD"],
     pattern: '/api/v1/siswa/me',
@@ -77,6 +89,48 @@ const routes = {
     pattern: '/api/v1/pembayaran-spp-les',
     tokens: [{"old":"/api/v1/pembayaran-spp-les","type":0,"val":"api","end":""},{"old":"/api/v1/pembayaran-spp-les","type":0,"val":"v1","end":""},{"old":"/api/v1/pembayaran-spp-les","type":0,"val":"pembayaran-spp-les","end":""}],
     types: placeholder as Registry['pembayaran_spp_les.index']['types'],
+  },
+  'murojaah.store_kategori': {
+    methods: ["POST"],
+    pattern: '/api/v1/murojaah/kategori',
+    tokens: [{"old":"/api/v1/murojaah/kategori","type":0,"val":"api","end":""},{"old":"/api/v1/murojaah/kategori","type":0,"val":"v1","end":""},{"old":"/api/v1/murojaah/kategori","type":0,"val":"murojaah","end":""},{"old":"/api/v1/murojaah/kategori","type":0,"val":"kategori","end":""}],
+    types: placeholder as Registry['murojaah.store_kategori']['types'],
+  },
+  'murojaah.update_kategori': {
+    methods: ["PUT"],
+    pattern: '/api/v1/murojaah/kategori/:id',
+    tokens: [{"old":"/api/v1/murojaah/kategori/:id","type":0,"val":"api","end":""},{"old":"/api/v1/murojaah/kategori/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/murojaah/kategori/:id","type":0,"val":"murojaah","end":""},{"old":"/api/v1/murojaah/kategori/:id","type":0,"val":"kategori","end":""},{"old":"/api/v1/murojaah/kategori/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['murojaah.update_kategori']['types'],
+  },
+  'murojaah.destroy_kategori': {
+    methods: ["DELETE"],
+    pattern: '/api/v1/murojaah/kategori/:id',
+    tokens: [{"old":"/api/v1/murojaah/kategori/:id","type":0,"val":"api","end":""},{"old":"/api/v1/murojaah/kategori/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/murojaah/kategori/:id","type":0,"val":"murojaah","end":""},{"old":"/api/v1/murojaah/kategori/:id","type":0,"val":"kategori","end":""},{"old":"/api/v1/murojaah/kategori/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['murojaah.destroy_kategori']['types'],
+  },
+  'murojaah.store_materi': {
+    methods: ["POST"],
+    pattern: '/api/v1/murojaah/materi',
+    tokens: [{"old":"/api/v1/murojaah/materi","type":0,"val":"api","end":""},{"old":"/api/v1/murojaah/materi","type":0,"val":"v1","end":""},{"old":"/api/v1/murojaah/materi","type":0,"val":"murojaah","end":""},{"old":"/api/v1/murojaah/materi","type":0,"val":"materi","end":""}],
+    types: placeholder as Registry['murojaah.store_materi']['types'],
+  },
+  'murojaah.update_materi': {
+    methods: ["PUT"],
+    pattern: '/api/v1/murojaah/materi/:id',
+    tokens: [{"old":"/api/v1/murojaah/materi/:id","type":0,"val":"api","end":""},{"old":"/api/v1/murojaah/materi/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/murojaah/materi/:id","type":0,"val":"murojaah","end":""},{"old":"/api/v1/murojaah/materi/:id","type":0,"val":"materi","end":""},{"old":"/api/v1/murojaah/materi/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['murojaah.update_materi']['types'],
+  },
+  'murojaah.destroy_materi': {
+    methods: ["DELETE"],
+    pattern: '/api/v1/murojaah/materi/:id',
+    tokens: [{"old":"/api/v1/murojaah/materi/:id","type":0,"val":"api","end":""},{"old":"/api/v1/murojaah/materi/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/murojaah/materi/:id","type":0,"val":"murojaah","end":""},{"old":"/api/v1/murojaah/materi/:id","type":0,"val":"materi","end":""},{"old":"/api/v1/murojaah/materi/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['murojaah.destroy_materi']['types'],
+  },
+  'murojaah.save_nilai': {
+    methods: ["POST"],
+    pattern: '/api/v1/murojaah/penilaian',
+    tokens: [{"old":"/api/v1/murojaah/penilaian","type":0,"val":"api","end":""},{"old":"/api/v1/murojaah/penilaian","type":0,"val":"v1","end":""},{"old":"/api/v1/murojaah/penilaian","type":0,"val":"murojaah","end":""},{"old":"/api/v1/murojaah/penilaian","type":0,"val":"penilaian","end":""}],
+    types: placeholder as Registry['murojaah.save_nilai']['types'],
   },
   'kelas.store': {
     methods: ["POST"],

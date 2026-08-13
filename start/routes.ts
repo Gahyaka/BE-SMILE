@@ -6,6 +6,7 @@ const KelasController = () => import('#controllers/kelas_controller')
 const SiswaController = () => import('#controllers/siswas_controller')
 const PembayaranSppLesController = () => import('#controllers/pembayaran_spp_les_controller')
 const TabunganController = () => import('#controllers/tabungan_controller')
+const MurojaahController = () => import('#controllers/murojaah_controller')
 
 router.group(() => {
   // Public Routes
@@ -17,6 +18,9 @@ router.group(() => {
     router.get('/auth/me', [AuthController, 'me'])
     router.put('/auth/change-password', [AuthController, 'changePassword'])
     router.post('/auth/logout', [AuthController, 'logout'])
+
+    router.get('/murojaah/kategori', [MurojaahController, 'getMasterData'])
+    router.get('/murojaah/siswa/:siswaId', [MurojaahController, 'getNilaiSiswa'])
 
 
 //Endpoint Khusus SISWA (Cuma bisa lihat data dirinya sendiri)
@@ -40,6 +44,18 @@ router.group(() => {
 
       router.get('/pembayaran-spp-les', [PembayaranSppLesController, 'index'])
   }).use(middleware.role({ roles: ['ADMIN_ADMINISTRASI', 'ADMIN_TRANSAKSI', 'GURU'] }))
+
+    router.group(() => {
+      router.post('/murojaah/kategori', [MurojaahController, 'storeKategori'])
+      router.put('/murojaah/kategori/:id', [MurojaahController, 'updateKategori'])
+      router.delete('/murojaah/kategori/:id', [MurojaahController, 'destroyKategori'])
+
+      router.post('/murojaah/materi', [MurojaahController, 'storeMateri'])
+      router.put('/murojaah/materi/:id', [MurojaahController, 'updateMateri'])
+      router.delete('/murojaah/materi/:id', [MurojaahController, 'destroyMateri'])
+
+      router.post('/murojaah/penilaian', [MurojaahController, 'saveNilai'])
+    }).use(middleware.role({ roles: ['ADMIN_ADMINISTRASI', 'GURU'] }))
       
 // Write / Mutation: Cuma ADMIN_ADMINISTRASI
     router.group(() => {
