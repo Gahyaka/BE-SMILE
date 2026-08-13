@@ -33,4 +33,11 @@ export interface ApiDefinition {
     restore: typeof routes['pembayaran_spp_les.restore']
     destroy: typeof routes['pembayaran_spp_les.destroy']
   }
+  tabungan: {
+    storeMutasi: typeof routes['tabungan.store_mutasi']
+    destroyMutasi: typeof routes['tabungan.destroy_mutasi']
+    restoreMutasi: typeof routes['tabungan.restore_mutasi']
+    summary: typeof routes['tabungan.summary']
+    showBySiswa: typeof routes['tabungan.show_by_siswa']
+  }
 }

@@ -144,6 +144,36 @@ const routes = {
     tokens: [{"old":"/api/v1/pembayaran-spp-les/:id","type":0,"val":"api","end":""},{"old":"/api/v1/pembayaran-spp-les/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/pembayaran-spp-les/:id","type":0,"val":"pembayaran-spp-les","end":""},{"old":"/api/v1/pembayaran-spp-les/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['pembayaran_spp_les.destroy']['types'],
   },
+  'tabungan.store_mutasi': {
+    methods: ["POST"],
+    pattern: '/api/v1/tabungan/mutasi',
+    tokens: [{"old":"/api/v1/tabungan/mutasi","type":0,"val":"api","end":""},{"old":"/api/v1/tabungan/mutasi","type":0,"val":"v1","end":""},{"old":"/api/v1/tabungan/mutasi","type":0,"val":"tabungan","end":""},{"old":"/api/v1/tabungan/mutasi","type":0,"val":"mutasi","end":""}],
+    types: placeholder as Registry['tabungan.store_mutasi']['types'],
+  },
+  'tabungan.destroy_mutasi': {
+    methods: ["DELETE"],
+    pattern: '/api/v1/tabungan/mutasi/:id',
+    tokens: [{"old":"/api/v1/tabungan/mutasi/:id","type":0,"val":"api","end":""},{"old":"/api/v1/tabungan/mutasi/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/tabungan/mutasi/:id","type":0,"val":"tabungan","end":""},{"old":"/api/v1/tabungan/mutasi/:id","type":0,"val":"mutasi","end":""},{"old":"/api/v1/tabungan/mutasi/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['tabungan.destroy_mutasi']['types'],
+  },
+  'tabungan.restore_mutasi': {
+    methods: ["PUT"],
+    pattern: '/api/v1/tabungan/mutasi/:id/restore',
+    tokens: [{"old":"/api/v1/tabungan/mutasi/:id/restore","type":0,"val":"api","end":""},{"old":"/api/v1/tabungan/mutasi/:id/restore","type":0,"val":"v1","end":""},{"old":"/api/v1/tabungan/mutasi/:id/restore","type":0,"val":"tabungan","end":""},{"old":"/api/v1/tabungan/mutasi/:id/restore","type":0,"val":"mutasi","end":""},{"old":"/api/v1/tabungan/mutasi/:id/restore","type":1,"val":"id","end":""},{"old":"/api/v1/tabungan/mutasi/:id/restore","type":0,"val":"restore","end":""}],
+    types: placeholder as Registry['tabungan.restore_mutasi']['types'],
+  },
+  'tabungan.summary': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/tabungan/summary',
+    tokens: [{"old":"/api/v1/tabungan/summary","type":0,"val":"api","end":""},{"old":"/api/v1/tabungan/summary","type":0,"val":"v1","end":""},{"old":"/api/v1/tabungan/summary","type":0,"val":"tabungan","end":""},{"old":"/api/v1/tabungan/summary","type":0,"val":"summary","end":""}],
+    types: placeholder as Registry['tabungan.summary']['types'],
+  },
+  'tabungan.show_by_siswa': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/tabungan/siswa/:siswaId',
+    tokens: [{"old":"/api/v1/tabungan/siswa/:siswaId","type":0,"val":"api","end":""},{"old":"/api/v1/tabungan/siswa/:siswaId","type":0,"val":"v1","end":""},{"old":"/api/v1/tabungan/siswa/:siswaId","type":0,"val":"tabungan","end":""},{"old":"/api/v1/tabungan/siswa/:siswaId","type":0,"val":"siswa","end":""},{"old":"/api/v1/tabungan/siswa/:siswaId","type":1,"val":"siswaId","end":""}],
+    types: placeholder as Registry['tabungan.show_by_siswa']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

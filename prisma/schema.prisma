@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Role hanya Admin dan Guru
+// Role User
 enum Role {
   ADMIN_ADMINISTRASI
   ADMIN_TRANSAKSI
@@ -16,16 +16,22 @@ enum Role {
 }
 
 // Jenis transaksi tabungan
-enum JenisTabungan {
-  SETOR
-  TARIK
+enum JenisMutasi {
+  DEBET
+  KREDIT
 }
 
-// Status Pembayaran SPP (Manual)
+// Status Pembayaran SPP
 enum StatusBayar {
   BELUM_LUNAS
   LUNAS
   BATAL
+}
+
+// Status Setoran Uang Fisik (Kas Riil vs Kas Pending)
+enum StatusSetoran {
+  SUDAH
+  BELUM
 }
 
 model User {
@@ -39,9 +45,9 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  // Relasi log petugas yang menginput transaksi
+  // Log Petugas yang menginput transaksi
   pembayaranSpp  TransaksiSpp[]
-  mutasiTabungan TabunganSiswa[]
+  mutasiTabungan MutasiTabungan[]
 
   @@map("users")
 }
@@ -60,70 +66,73 @@ model Kelas {
 }
 
 model Siswa {
-  id           String   @id @default(uuid())
-  nis          String?  @unique
-  namaLengkap  String   @map("nama_lengkap")
-  namaOrangTua String   @map("nama_orang_tua")
-  kelasId      String?  @map("kelas_id")
+  id           String  @id @default(uuid())
+  nis          String? @unique
+  namaLengkap  String  @map("nama_lengkap")
+  namaOrangTua String  @map("nama_orang_tua")
+  kelasId      String? @map("kelas_id")
+  kelas        Kelas?  @relation(fields: [kelasId], references: [id], onDelete: SetNull)
   user         User?
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
 
-  kelas    Kelas?          @relation(fields: [kelasId], references: [id], onDelete: SetNull)
-  spp      TransaksiSpp[]
-  tabungan TabunganSiswa[]
+  saldoTabungan Decimal @default(0) @map("saldo_tabungan") @db.Decimal(12, 2)
+
+  transaksiSpp   TransaksiSpp[]
+  mutasiTabungan MutasiTabungan[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("siswa")
 }
 
-enum StatusSetoran {
-  SUDAH
-  BELUM 
-}
-
 model TransaksiSpp {
-  id            String        @id @default(uuid())
-  nomorKwitansi String?       @unique @map("nomor_kwitansi")
-  siswaId       String        @map("siswa_id")
-  
-  bulan         Int?          // Opsional jika bayar berdasarkan tanggal
-  tahun         Int?          // e.g. 2026
-  
+  id            String  @id @default(uuid())
+  nomorKwitansi String? @unique @map("nomor_kwitansi")
+  siswaId       String  @map("siswa_id")
+
+  bulan Int? // Opsional jika bayar berdasarkan tanggal
+  tahun Int? // e.g. 2026
+
   // Field Rincian Pembayaran
-  nominalSpp    Decimal       @default(0) @map("nominal_spp") @db.Decimal(12, 2)
-  nominalLes    Decimal       @default(0) @map("nominal_les") @db.Decimal(12, 2)
-  totalBayar    Decimal       @map("total_bayar") @db.Decimal(12, 2)
-  
+  nominalSpp Decimal @default(0) @map("nominal_spp") @db.Decimal(12, 2)
+  nominalLes Decimal @default(0) @map("nominal_les") @db.Decimal(12, 2)
+  totalBayar Decimal @map("total_bayar") @db.Decimal(12, 2)
+
   status        StatusBayar   @default(LUNAS)
-  statusSetoran StatusSetoran @default(BELUM) @map("status_setoran") 
+  statusSetoran StatusSetoran @default(BELUM) @map("status_setoran")
   tanggalBayar  DateTime      @default(now()) @map("tanggal_bayar")
-  
-  petugasId     String?       @map("petugas_id")
-  catatan       String?       @db.Text
 
-  createdAt     DateTime      @default(now()) @map("created_at")
-  updatedAt     DateTime      @updatedAt @map("updated_at")
-  deletedAt     DateTime?     @map("deleted_at")
+  petugasId String? @map("petugas_id")
+  catatan   String? @db.Text
 
-  siswa         Siswa         @relation(fields: [siswaId], references: [id], onDelete: Cascade)
-  petugas       User?         @relation(fields: [petugasId], references: [id], onDelete: SetNull)
-
-  @@map("transaksi_spp")
-}
-
-model TabunganSiswa {
-  id            String        @id @default(uuid())
-  nomorKwitansi String?       @map("nomor_kwitansi") // Untuk pencetakan bukti setor/tarik
-  siswaId       String        @map("siswa_id")
-  jenis         JenisTabungan // SETOR atau TARIK
-  nominal       Decimal       @db.Decimal(12, 2)
-  saldoAkhir    Decimal       @map("saldo_akhir") @db.Decimal(12, 2) // Cache saldo setelah transaksi
-  petugasId     String?       @map("petugas_id")
-  keterangan    String?
-  createdAt     DateTime      @default(now()) @map("created_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
 
   siswa   Siswa @relation(fields: [siswaId], references: [id], onDelete: Cascade)
   petugas User? @relation(fields: [petugasId], references: [id], onDelete: SetNull)
 
-  @@map("tabungan_siswa")
+  @@map("transaksi_spp")
+}
+
+model MutasiTabungan {
+  id      String @id @default(uuid())
+  siswaId String @map("siswa_id")
+  siswa   Siswa  @relation(fields: [siswaId], references: [id], onDelete: Cascade)
+
+  tanggal      DateTime    @default(now())
+  jenisMutasi  JenisMutasi @map("jenis_mutasi") // DEBET | KREDIT
+  nominal      Decimal     @db.Decimal(12, 2)
+  saldoSebelum Decimal     @map("saldo_sebelum") @db.Decimal(12, 2)
+  saldoSesudah Decimal     @map("saldo_sesudah") @db.Decimal(12, 2)
+
+  keterangan String? @db.Text
+  petugasId  String? @map("petugas_id")
+  petugas    User?   @relation(fields: [petugasId], references: [id], onDelete: SetNull)
+
+  deletedAt DateTime? @map("deleted_at") // Soft Delete
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  @@map("mutasi_tabungan")
 }

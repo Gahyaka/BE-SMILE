@@ -283,4 +283,64 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/pembayaran_spp_les_controller').default['destroy']>>>
     }
   }
+  'tabungan.store_mutasi': {
+    methods: ["POST"]
+    pattern: '/api/v1/tabungan/mutasi'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/tabungan_controller').default['storeMutasi']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/tabungan_controller').default['storeMutasi']>>>
+    }
+  }
+  'tabungan.destroy_mutasi': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/tabungan/mutasi/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/tabungan_controller').default['destroyMutasi']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/tabungan_controller').default['destroyMutasi']>>>
+    }
+  }
+  'tabungan.restore_mutasi': {
+    methods: ["PUT"]
+    pattern: '/api/v1/tabungan/mutasi/:id/restore'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/tabungan_controller').default['restoreMutasi']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/tabungan_controller').default['restoreMutasi']>>>
+    }
+  }
+  'tabungan.summary': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/tabungan/summary'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/tabungan_controller').default['summary']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/tabungan_controller').default['summary']>>>
+    }
+  }
+  'tabungan.show_by_siswa': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/tabungan/siswa/:siswaId'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { siswaId: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/tabungan_controller').default['showBySiswa']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/tabungan_controller').default['showBySiswa']>>>
+    }
+  }
 }

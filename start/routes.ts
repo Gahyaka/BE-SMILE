@@ -5,6 +5,7 @@ const AuthController = () => import('#controllers/auth_controller')
 const KelasController = () => import('#controllers/kelas_controller')
 const SiswaController = () => import('#controllers/siswas_controller')
 const PembayaranSppLesController = () => import('#controllers/pembayaran_spp_les_controller')
+const TabunganController = () => import('#controllers/tabungan_controller')
 
 router.group(() => {
   // Public Routes
@@ -17,8 +18,9 @@ router.group(() => {
     router.put('/auth/change-password', [AuthController, 'changePassword'])
     router.post('/auth/logout', [AuthController, 'logout'])
 
+
 //Endpoint Khusus SISWA (Cuma bisa lihat data dirinya sendiri)
-  router.get('/siswa/me', [SiswaController, 'me'])
+    router.get('/siswa/me', [SiswaController, 'me'])
     .use(middleware.role({ roles: ['SISWA'] }))
 
 // KELOLA USER (Cuma ADMIN_ADMINISTRASI)
@@ -41,7 +43,7 @@ router.group(() => {
       
 // Write / Mutation: Cuma ADMIN_ADMINISTRASI
     router.group(() => {
-      router.post('/kelas', [KelasController, 'store'])
+      router.post('/kelas', [KelasController, 'store'])  
       router.put('/kelas/:id', [KelasController, 'update'])
       router.delete('/kelas/:id', [KelasController, 'destroy'])
 
@@ -57,6 +59,11 @@ router.group(() => {
       router.put('/pembayaran-spp-les/:id', [PembayaranSppLesController, 'update'])
       router.put('/pembayaran-spp-les/:id/restore', [PembayaranSppLesController, 'restore'])
       router.delete('/pembayaran-spp-les/:id', [PembayaranSppLesController, 'destroy'])
+      router.post('/tabungan/mutasi', [TabunganController, 'storeMutasi'])
+      router.delete('/tabungan/mutasi/:id', [TabunganController, 'destroyMutasi'])
+      router.put('/tabungan/mutasi/:id/restore', [TabunganController, 'restoreMutasi'])
+      router.get('/tabungan/summary', [TabunganController, 'summary'])
+      router.get('/tabungan/siswa/:siswaId', [TabunganController, 'showBySiswa']) 
     }).use(middleware.role({ roles: ['ADMIN_TRANSAKSI', 'ADMIN_ADMINISTRASI'] }))
 
   }).use(middleware.auth())
