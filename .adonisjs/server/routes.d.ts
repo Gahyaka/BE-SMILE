@@ -5,6 +5,7 @@ type ParamValue = string | number | bigint | boolean
 export type ScannedRoutes = {
   ALL: {
     'auth.login': { paramsTuple?: []; params?: {} }
+    'dokumentasi.public_gallery': { paramsTuple?: []; params?: {} }
     'auth.me': { paramsTuple?: []; params?: {} }
     'auth.change_password': { paramsTuple?: []; params?: {} }
     'auth.logout': { paramsTuple?: []; params?: {} }
@@ -38,6 +39,7 @@ export type ScannedRoutes = {
     'siswa.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'siswa.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'auth.reset_password': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'dokumentasi.toggle_public_gallery': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'pembayaran_spp_les.store': { paramsTuple?: []; params?: {} }
     'pembayaran_spp_les.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'pembayaran_spp_les.restore': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -62,6 +64,7 @@ export type ScannedRoutes = {
     'tabungan.store_mutasi': { paramsTuple?: []; params?: {} }
   }
   GET: {
+    'dokumentasi.public_gallery': { paramsTuple?: []; params?: {} }
     'auth.me': { paramsTuple?: []; params?: {} }
     'murojaah.get_master_data': { paramsTuple?: []; params?: {} }
     'murojaah.get_nilai_siswa': { paramsTuple: [ParamValue]; params: {'siswaId': ParamValue} }
@@ -78,6 +81,7 @@ export type ScannedRoutes = {
     'tabungan.show_by_siswa': { paramsTuple: [ParamValue]; params: {'siswaId': ParamValue} }
   }
   HEAD: {
+    'dokumentasi.public_gallery': { paramsTuple?: []; params?: {} }
     'auth.me': { paramsTuple?: []; params?: {} }
     'murojaah.get_master_data': { paramsTuple?: []; params?: {} }
     'murojaah.get_nilai_siswa': { paramsTuple: [ParamValue]; params: {'siswaId': ParamValue} }
@@ -114,6 +118,9 @@ export type ScannedRoutes = {
     'siswa.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'pembayaran_spp_les.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'tabungan.destroy_mutasi': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+  }
+  PATCH: {
+    'dokumentasi.toggle_public_gallery': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {

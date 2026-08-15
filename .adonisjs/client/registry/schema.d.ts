@@ -19,6 +19,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['login']>>>
     }
   }
+  'dokumentasi.public_gallery': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/public/galeri'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/dokumentasi_controller').default['publicGallery']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/dokumentasi_controller').default['publicGallery']>>>
+    }
+  }
   'auth.me': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/auth/me'
@@ -413,6 +425,18 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['resetPassword']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['resetPassword']>>>
+    }
+  }
+  'dokumentasi.toggle_public_gallery': {
+    methods: ["PATCH"]
+    pattern: '/api/v1/dokumentasi/:id/toggle-public'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/dokumentasi_controller').default['togglePublicGallery']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/dokumentasi_controller').default['togglePublicGallery']>>>
     }
   }
   'pembayaran_spp_les.store': {

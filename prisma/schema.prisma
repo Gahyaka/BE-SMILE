@@ -207,6 +207,8 @@ model KegiatanDokumentasi {
   deskripsi       String?           @db.Text
   gdriveFolderId  String?           @map("gdrive_folder_id")
   gdriveFolderUrl String?           @map("gdrive_folder_url")
+  isPublic        Boolean            @default(false) // Ditampilkan di Landing Page atau tidak
+  thumbnailFotoId String?
   
   petugasId       String?           @map("petugas_id")
   petugas         User?             @relation(fields: [petugasId], references: [id], onDelete: SetNull)

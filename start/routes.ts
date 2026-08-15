@@ -12,6 +12,7 @@ const DokumentasiController = () => import('#controllers/dokumentasi_controller'
 router.group(() => {
   // Public Routes
   router.post('/auth/login', [AuthController, 'login'])
+  router.get('/public/galeri', [DokumentasiController, 'publicGallery'])
 
 // Protected Routes (Butuh Bearer Token)
   router.group(() => {
@@ -76,6 +77,7 @@ router.group(() => {
       router.delete('/siswa/:id', [SiswaController, 'destroy'])
 
       router.put('/users/:id/reset-password', [AuthController, 'resetPassword'])
+      router.patch('/dokumentasi/:id/toggle-public', [DokumentasiController, 'togglePublicGallery'])
     }).use(middleware.role({ roles: ['ADMIN_ADMINISTRASI'] }))
 
       router.group(() => {
