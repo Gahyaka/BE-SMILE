@@ -22,6 +22,14 @@ export interface ApiDefinition {
     destroyMateri: typeof routes['murojaah.destroy_materi']
     saveNilai: typeof routes['murojaah.save_nilai']
   }
+  dokumentasi: {
+    index: typeof routes['dokumentasi.index']
+    show: typeof routes['dokumentasi.show']
+    store: typeof routes['dokumentasi.store']
+    update: typeof routes['dokumentasi.update']
+    destroy: typeof routes['dokumentasi.destroy']
+    destroyFoto: typeof routes['dokumentasi.destroy_foto']
+  }
   siswa: {
     me: typeof routes['siswa.me']
     index: typeof routes['siswa.index']

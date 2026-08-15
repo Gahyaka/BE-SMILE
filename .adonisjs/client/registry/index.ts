@@ -42,6 +42,18 @@ const routes = {
     tokens: [{"old":"/api/v1/murojaah/siswa/:siswaId","type":0,"val":"api","end":""},{"old":"/api/v1/murojaah/siswa/:siswaId","type":0,"val":"v1","end":""},{"old":"/api/v1/murojaah/siswa/:siswaId","type":0,"val":"murojaah","end":""},{"old":"/api/v1/murojaah/siswa/:siswaId","type":0,"val":"siswa","end":""},{"old":"/api/v1/murojaah/siswa/:siswaId","type":1,"val":"siswaId","end":""}],
     types: placeholder as Registry['murojaah.get_nilai_siswa']['types'],
   },
+  'dokumentasi.index': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/dokumentasi',
+    tokens: [{"old":"/api/v1/dokumentasi","type":0,"val":"api","end":""},{"old":"/api/v1/dokumentasi","type":0,"val":"v1","end":""},{"old":"/api/v1/dokumentasi","type":0,"val":"dokumentasi","end":""}],
+    types: placeholder as Registry['dokumentasi.index']['types'],
+  },
+  'dokumentasi.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/dokumentasi/:id',
+    tokens: [{"old":"/api/v1/dokumentasi/:id","type":0,"val":"api","end":""},{"old":"/api/v1/dokumentasi/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/dokumentasi/:id","type":0,"val":"dokumentasi","end":""},{"old":"/api/v1/dokumentasi/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['dokumentasi.show']['types'],
+  },
   'siswa.me': {
     methods: ["GET","HEAD"],
     pattern: '/api/v1/siswa/me',
@@ -131,6 +143,30 @@ const routes = {
     pattern: '/api/v1/murojaah/penilaian',
     tokens: [{"old":"/api/v1/murojaah/penilaian","type":0,"val":"api","end":""},{"old":"/api/v1/murojaah/penilaian","type":0,"val":"v1","end":""},{"old":"/api/v1/murojaah/penilaian","type":0,"val":"murojaah","end":""},{"old":"/api/v1/murojaah/penilaian","type":0,"val":"penilaian","end":""}],
     types: placeholder as Registry['murojaah.save_nilai']['types'],
+  },
+  'dokumentasi.store': {
+    methods: ["POST"],
+    pattern: '/api/v1/dokumentasi',
+    tokens: [{"old":"/api/v1/dokumentasi","type":0,"val":"api","end":""},{"old":"/api/v1/dokumentasi","type":0,"val":"v1","end":""},{"old":"/api/v1/dokumentasi","type":0,"val":"dokumentasi","end":""}],
+    types: placeholder as Registry['dokumentasi.store']['types'],
+  },
+  'dokumentasi.update': {
+    methods: ["PUT"],
+    pattern: '/api/v1/dokumentasi/:id',
+    tokens: [{"old":"/api/v1/dokumentasi/:id","type":0,"val":"api","end":""},{"old":"/api/v1/dokumentasi/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/dokumentasi/:id","type":0,"val":"dokumentasi","end":""},{"old":"/api/v1/dokumentasi/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['dokumentasi.update']['types'],
+  },
+  'dokumentasi.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/v1/dokumentasi/:id',
+    tokens: [{"old":"/api/v1/dokumentasi/:id","type":0,"val":"api","end":""},{"old":"/api/v1/dokumentasi/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/dokumentasi/:id","type":0,"val":"dokumentasi","end":""},{"old":"/api/v1/dokumentasi/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['dokumentasi.destroy']['types'],
+  },
+  'dokumentasi.destroy_foto': {
+    methods: ["DELETE"],
+    pattern: '/api/v1/dokumentasi/foto/:fotoId',
+    tokens: [{"old":"/api/v1/dokumentasi/foto/:fotoId","type":0,"val":"api","end":""},{"old":"/api/v1/dokumentasi/foto/:fotoId","type":0,"val":"v1","end":""},{"old":"/api/v1/dokumentasi/foto/:fotoId","type":0,"val":"dokumentasi","end":""},{"old":"/api/v1/dokumentasi/foto/:fotoId","type":0,"val":"foto","end":""},{"old":"/api/v1/dokumentasi/foto/:fotoId","type":1,"val":"fotoId","end":""}],
+    types: placeholder as Registry['dokumentasi.destroy_foto']['types'],
   },
   'kelas.store': {
     methods: ["POST"],

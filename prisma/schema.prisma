@@ -58,6 +58,8 @@ model User {
   mutasiTabungan MutasiTabungan[]
   penilaianMurojaah PenilaianMurojaah[]
 
+  kegiatanDokumentasi KegiatanDokumentasi[]
+
   @@map("users")
 }
 
@@ -196,4 +198,39 @@ model PenilaianMurojaah {
   // Compound Unique constraint: 1 Siswa hanya punya 1 record nilai per Materi
   @@unique([siswaId, materiId])
   @@map("penilaian_murojaah")
+}
+
+model KegiatanDokumentasi {
+  id              String            @id @default(uuid())
+  namaKegiatan    String            @map("nama_kegiatan")
+  tanggalKegiatan DateTime          @default(now()) @map("tanggal_kegiatan")
+  deskripsi       String?           @db.Text
+  gdriveFolderId  String?           @map("gdrive_folder_id")
+  gdriveFolderUrl String?           @map("gdrive_folder_url")
+  
+  petugasId       String?           @map("petugas_id")
+  petugas         User?             @relation(fields: [petugasId], references: [id], onDelete: SetNull)
+
+  foto            FotoDokumentasi[]
+  deletedAt       DateTime?         @map("deleted_at")
+
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+
+  @@map("kegiatan_dokumentasi")
+}
+
+model FotoDokumentasi {
+  id          String              @id @default(uuid())
+  kegiatanId  String              @map("kegiatan_id")
+  kegiatan    KegiatanDokumentasi @relation(fields: [kegiatanId], references: [id], onDelete: Cascade)
+  
+  namaFile    String              @map("nama_file")
+  gdriveFileId String             @map("gdrive_file_id")
+  viewUrl     String              @map("view_url") @db.Text
+  downloadUrl String?             @map("download_url") @db.Text
+
+  createdAt   DateTime            @default(now()) @map("created_at")
+
+  @@map("foto_dokumentasi")
 }
