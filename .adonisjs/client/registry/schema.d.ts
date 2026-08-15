@@ -79,6 +79,30 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/murojaah_controller').default['getNilaiSiswa']>>>
     }
   }
+  'dokumentasi.index': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/dokumentasi'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/dokumentasi_controller').default['index']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/dokumentasi_controller').default['index']>>>
+    }
+  }
+  'dokumentasi.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/dokumentasi/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/dokumentasi_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/dokumentasi_controller').default['show']>>>
+    }
+  }
   'siswa.me': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/siswa/me'
@@ -257,6 +281,54 @@ export interface Registry {
       query: {}
       response: ExtractResponse<Awaited<ReturnType<import('#controllers/murojaah_controller').default['saveNilai']>>>
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/murojaah_controller').default['saveNilai']>>>
+    }
+  }
+  'dokumentasi.store': {
+    methods: ["POST"]
+    pattern: '/api/v1/dokumentasi'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/dokumentasi_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/dokumentasi_controller').default['store']>>>
+    }
+  }
+  'dokumentasi.update': {
+    methods: ["PUT"]
+    pattern: '/api/v1/dokumentasi/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/dokumentasi_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/dokumentasi_controller').default['update']>>>
+    }
+  }
+  'dokumentasi.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/dokumentasi/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/dokumentasi_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/dokumentasi_controller').default['destroy']>>>
+    }
+  }
+  'dokumentasi.destroy_foto': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/dokumentasi/foto/:fotoId'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { fotoId: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/dokumentasi_controller').default['destroyFoto']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/dokumentasi_controller').default['destroyFoto']>>>
     }
   }
   'kelas.store': {

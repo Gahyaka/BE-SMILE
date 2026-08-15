@@ -7,6 +7,7 @@ const SiswaController = () => import('#controllers/siswas_controller')
 const PembayaranSppLesController = () => import('#controllers/pembayaran_spp_les_controller')
 const TabunganController = () => import('#controllers/tabungan_controller')
 const MurojaahController = () => import('#controllers/murojaah_controller')
+const DokumentasiController = () => import('#controllers/dokumentasi_controller')
 
 router.group(() => {
   // Public Routes
@@ -22,7 +23,9 @@ router.group(() => {
     router.get('/murojaah/kategori', [MurojaahController, 'getMasterData'])
     router.get('/murojaah/siswa/:siswaId', [MurojaahController, 'getNilaiSiswa'])
 
-
+    router.get('/dokumentasi', [DokumentasiController, 'index'])
+    router.get('/dokumentasi/:id', [DokumentasiController, 'show'])
+    
 //Endpoint Khusus SISWA (Cuma bisa lihat data dirinya sendiri)
     router.get('/siswa/me', [SiswaController, 'me'])
     .use(middleware.role({ roles: ['SISWA'] }))
@@ -55,6 +58,11 @@ router.group(() => {
       router.delete('/murojaah/materi/:id', [MurojaahController, 'destroyMateri'])
 
       router.post('/murojaah/penilaian', [MurojaahController, 'saveNilai'])
+
+      router.post('/dokumentasi', [DokumentasiController, 'store'])
+      router.put('/dokumentasi/:id', [DokumentasiController, 'update'])
+      router.delete('/dokumentasi/:id', [DokumentasiController, 'destroy'])
+      router.delete('/dokumentasi/foto/:fotoId', [DokumentasiController, 'destroyFoto'])
     }).use(middleware.role({ roles: ['ADMIN_ADMINISTRASI', 'GURU'] }))
       
 // Write / Mutation: Cuma ADMIN_ADMINISTRASI
