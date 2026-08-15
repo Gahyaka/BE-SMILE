@@ -320,4 +320,110 @@ export default class DokumentasiController {
       return response.internalServerError({ success: false, error: error.message })
     }
   }
+
+  /**
+   * GET /api/v1/public/galeri
+   * Public Endpoint (Landing Page, Tanpa Auth)
+   */
+  public async publicGallery({ response }: HttpContext) {
+    try {
+      const galeri = await prisma.kegiatanDokumentasi.findMany({
+        where: { isPublic: true },
+        orderBy: { tanggalKegiatan: 'desc' },
+        include: {
+          foto: {
+            take: 1, // Fallback ambil 1 foto teratas jika thumbnail tidak diset spesifik
+          },
+        },
+      })
+
+      // Format response agar frontend landing page mudah render
+      const formatted = await Promise.all(
+        galeri.map(async (kegiatan) => {
+          let coverFoto = kegiatan.foto[0] || null
+
+          if (kegiatan.thumbnailFotoId) {
+            const specificCover = await prisma.fotoDokumentasi.findUnique({
+              where: { id: kegiatan.thumbnailFotoId },
+            })
+            if (specificCover) coverFoto = specificCover
+          }
+
+          return {
+            id: kegiatan.id,
+            namaKegiatan: kegiatan.namaKegiatan,
+            deskripsi: kegiatan.deskripsi,
+            tanggalKegiatan: kegiatan.tanggalKegiatan,
+            folderGdriveUrl: kegiatan.gdriveFolderUrl,
+            cover: coverFoto
+              ? {
+                  id: coverFoto.id,
+                  namaFile: coverFoto.namaFile,
+                  viewUrl: coverFoto.viewUrl,
+                }
+              : null,
+          }
+        })
+      )
+
+      return response.ok({
+        success: true,
+        message: 'Berhasil mengambil galeri kegiatan publik',
+        data: formatted,
+      })
+    } catch (error: any) {
+      return response.internalServerError({ success: false, error: error.message })
+    }
+  }
+
+/**
+   * PATCH /api/v1/dokumentasi/:id/toggle-public
+   * Khusus Admin: Mengatur status tayang di landing page & pilih cover foto
+   */
+  public async togglePublicGallery({ params, request, response }: HttpContext) {
+    try {
+      const { isPublic, thumbnailFotoId } = request.only(['isPublic', 'thumbnailFotoId'])
+
+      const kegiatan = await prisma.kegiatanDokumentasi.findUnique({
+        where: { id: String(params.id) },
+      })
+
+      if (!kegiatan) {
+        return response.notFound({ success: false, message: 'Kegiatan tidak ditemukan' })
+      }
+
+      // Validasi kepemilikan foto thumbnail
+      if (thumbnailFotoId) {
+        const fotoExists = await prisma.fotoDokumentasi.findFirst({
+          where: {
+            id: String(thumbnailFotoId),
+            kegiatanId: kegiatan.id, // Pastikan foto ini memang milik kegiatan terkait
+          },
+        })
+
+        if (!fotoExists) {
+          return response.badRequest({
+            success: false,
+            message: 'Foto yang dipilih tidak ditemukan dalam kegiatan ini',
+          })
+        }
+      }
+
+      const updated = await prisma.kegiatanDokumentasi.update({
+        where: { id: kegiatan.id },
+        data: {
+          isPublic: isPublic !== undefined ? isPublic : !kegiatan.isPublic,
+          thumbnailFotoId: thumbnailFotoId !== undefined ? thumbnailFotoId : kegiatan.thumbnailFotoId,
+        },
+      })
+
+      return response.ok({
+        success: true,
+        message: `Status galeri publik berhasil diperbarui`,
+        data: updated,
+      })
+    } catch (error: any) {
+      return response.internalServerError({ success: false, error: error.message })
+    }
+  }
 }

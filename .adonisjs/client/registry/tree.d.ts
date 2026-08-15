@@ -11,6 +11,16 @@ export interface ApiDefinition {
     register: typeof routes['auth.register']
     resetPassword: typeof routes['auth.reset_password']
   }
+  dokumentasi: {
+    publicGallery: typeof routes['dokumentasi.public_gallery']
+    index: typeof routes['dokumentasi.index']
+    show: typeof routes['dokumentasi.show']
+    store: typeof routes['dokumentasi.store']
+    update: typeof routes['dokumentasi.update']
+    destroy: typeof routes['dokumentasi.destroy']
+    destroyFoto: typeof routes['dokumentasi.destroy_foto']
+    togglePublicGallery: typeof routes['dokumentasi.toggle_public_gallery']
+  }
   murojaah: {
     getMasterData: typeof routes['murojaah.get_master_data']
     getNilaiSiswa: typeof routes['murojaah.get_nilai_siswa']
@@ -21,14 +31,6 @@ export interface ApiDefinition {
     updateMateri: typeof routes['murojaah.update_materi']
     destroyMateri: typeof routes['murojaah.destroy_materi']
     saveNilai: typeof routes['murojaah.save_nilai']
-  }
-  dokumentasi: {
-    index: typeof routes['dokumentasi.index']
-    show: typeof routes['dokumentasi.show']
-    store: typeof routes['dokumentasi.store']
-    update: typeof routes['dokumentasi.update']
-    destroy: typeof routes['dokumentasi.destroy']
-    destroyFoto: typeof routes['dokumentasi.destroy_foto']
   }
   siswa: {
     me: typeof routes['siswa.me']

@@ -12,6 +12,12 @@ const routes = {
     tokens: [{"old":"/api/v1/auth/login","type":0,"val":"api","end":""},{"old":"/api/v1/auth/login","type":0,"val":"v1","end":""},{"old":"/api/v1/auth/login","type":0,"val":"auth","end":""},{"old":"/api/v1/auth/login","type":0,"val":"login","end":""}],
     types: placeholder as Registry['auth.login']['types'],
   },
+  'dokumentasi.public_gallery': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/public/galeri',
+    tokens: [{"old":"/api/v1/public/galeri","type":0,"val":"api","end":""},{"old":"/api/v1/public/galeri","type":0,"val":"v1","end":""},{"old":"/api/v1/public/galeri","type":0,"val":"public","end":""},{"old":"/api/v1/public/galeri","type":0,"val":"galeri","end":""}],
+    types: placeholder as Registry['dokumentasi.public_gallery']['types'],
+  },
   'auth.me': {
     methods: ["GET","HEAD"],
     pattern: '/api/v1/auth/me',
@@ -209,6 +215,12 @@ const routes = {
     pattern: '/api/v1/users/:id/reset-password',
     tokens: [{"old":"/api/v1/users/:id/reset-password","type":0,"val":"api","end":""},{"old":"/api/v1/users/:id/reset-password","type":0,"val":"v1","end":""},{"old":"/api/v1/users/:id/reset-password","type":0,"val":"users","end":""},{"old":"/api/v1/users/:id/reset-password","type":1,"val":"id","end":""},{"old":"/api/v1/users/:id/reset-password","type":0,"val":"reset-password","end":""}],
     types: placeholder as Registry['auth.reset_password']['types'],
+  },
+  'dokumentasi.toggle_public_gallery': {
+    methods: ["PATCH"],
+    pattern: '/api/v1/dokumentasi/:id/toggle-public',
+    tokens: [{"old":"/api/v1/dokumentasi/:id/toggle-public","type":0,"val":"api","end":""},{"old":"/api/v1/dokumentasi/:id/toggle-public","type":0,"val":"v1","end":""},{"old":"/api/v1/dokumentasi/:id/toggle-public","type":0,"val":"dokumentasi","end":""},{"old":"/api/v1/dokumentasi/:id/toggle-public","type":1,"val":"id","end":""},{"old":"/api/v1/dokumentasi/:id/toggle-public","type":0,"val":"toggle-public","end":""}],
+    types: placeholder as Registry['dokumentasi.toggle_public_gallery']['types'],
   },
   'pembayaran_spp_les.store': {
     methods: ["POST"],
