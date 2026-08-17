@@ -1,19 +1,21 @@
 import 'reflect-metadata'
 import { Ignitor } from '@adonisjs/core'
 
-let server: any
+let requestHandler: any
 
 export default async function handler(req: any, res: any) {
-  if (!server) {
-    const ignitor = new Ignitor(new URL('../', import.meta.url))
+  if (!requestHandler) {
+    const ignitor = new Ignitor(new URL('..', import.meta.url))
     const app = ignitor.createApp('web')
-    
+
     await app.init()
     await app.boot()
     await app.start(() => {})
-    
-    server = await app.container.make('server')
+
+    // Ambil server instance dari container Adonis v6
+    const server = await app.container.make('adonis.http.server')
+    requestHandler = server.handle.bind(server)
   }
 
-  return server.handle(req, res)
+  return requestHandler(req, res)
 }
