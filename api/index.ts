@@ -5,7 +5,7 @@ let server: any
 
 export default async function handler(req: any, res: any) {
   if (!server) {
-    const ignitor = new Ignitor(new URL('..', import.meta.url))
+    const ignitor = new Ignitor(new URL('../', import.meta.url))
     const app = ignitor.createApp('web')
     
     await app.init()
