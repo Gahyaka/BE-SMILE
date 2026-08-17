@@ -9,7 +9,7 @@ import { defineConfig } from '@adonisjs/cors'
  */
 const corsConfig = defineConfig({
   /**
-   * Enable or disable CORS handling globally.
+   * Enable or disable CORS handling globally
    */
   enabled: true,
 
