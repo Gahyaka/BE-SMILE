@@ -79,8 +79,15 @@ model Kelas {
 model Siswa {
   id           String  @id @default(uuid())
   nis          String? @unique
+  nisn          String?   @unique
   namaLengkap  String  @map("nama_lengkap")
   namaOrangTua String  @map("nama_orang_tua")
+  alamat        String?
+  tinggiBadan   Float?
+  beratBadan    Float?
+  lingkarKepala Float?
+  semester      String?
+  tahunAjaran   String?
   kelasId      String? @map("kelas_id")
   kelas        Kelas?  @relation(fields: [kelasId], references: [id], onDelete: SetNull)
   user         User?
