@@ -12,7 +12,7 @@ function generateRandomPassword(length = 6): string {
 }
 
 export default class SiswaController {
-    /**
+  /**
    * GET /api/v1/siswa/me
    * Mengambil data siswa milik user yang sedang login
    */
@@ -20,13 +20,12 @@ export default class SiswaController {
     try {
       const authUser = (request as any).authUser
 
-      // Cari data user beserta data siswanya
       const userWithSiswa = await prisma.user.findUnique({
         where: { id: authUser.id },
         include: {
           siswa: {
             include: {
-              kelas: true, 
+              kelas: true,
             },
           },
         },
@@ -52,6 +51,7 @@ export default class SiswaController {
       })
     }
   }
+
   /**
    * GET /api/v1/siswa (Get All Siswa)
    */
@@ -66,6 +66,7 @@ export default class SiswaController {
             OR: [
               { namaLengkap: { contains: search } },
               { nis: { contains: search } },
+              { nisn: { contains: search } },
             ],
           }),
         },
@@ -101,7 +102,19 @@ export default class SiswaController {
    */
   public async store({ request, response }: HttpContext) {
     try {
-      const { nis, namaLengkap, namaOrangTua, kelasId } = request.body()
+      const {
+        nis,
+        nisn,
+        namaLengkap,
+        namaOrangTua,
+        alamat,
+        tinggiBadan,
+        beratBadan,
+        lingkarKepala,
+        semester,
+        tahunAjaran,
+        kelasId,
+      } = request.body()
 
       if (!namaLengkap || !namaOrangTua) {
         return response.badRequest({
@@ -110,13 +123,12 @@ export default class SiswaController {
         })
       }
 
-      // Cek jika NIS sudah ada
+      // Cek keunikan NIS (jika dikirim)
       if (nis) {
-        const existingSiswa = await prisma.siswa.findUnique({
+        const existingNis = await prisma.siswa.findUnique({
           where: { nis },
         })
-
-        if (existingSiswa) {
+        if (existingNis) {
           return response.conflict({
             success: false,
             message: 'NIS sudah terdaftar',
@@ -124,11 +136,32 @@ export default class SiswaController {
         }
       }
 
+      // Cek keunikan NISN (jika dikirim)
+      if (nisn) {
+        const existingNisn = await prisma.siswa.findUnique({
+          where: { nisn },
+        })
+        if (existingNisn) {
+          return response.conflict({
+            success: false,
+            message: 'NISN sudah terdaftar',
+          })
+        }
+      }
+
+      // Simpan data siswa baru
       const newSiswa = await prisma.siswa.create({
         data: {
           nis: nis || null,
+          nisn: nisn || null,
           namaLengkap,
           namaOrangTua,
+          alamat: alamat || null,
+          tinggiBadan: tinggiBadan ? parseFloat(tinggiBadan) : null,
+          beratBadan: beratBadan ? parseFloat(beratBadan) : null,
+          lingkarKepala: lingkarKepala ? parseFloat(lingkarKepala) : null,
+          semester: semester || null,
+          tahunAjaran: tahunAjaran || null,
           kelasId: kelasId || null,
         },
         include: {
@@ -136,24 +169,26 @@ export default class SiswaController {
         },
       })
 
-      const username = nis
-        ? `siswa_${nis}`
+      // Generate Username: prioritas NISN -> NIS -> Random ID
+      const identifier = nisn || nis
+      const username = identifier
+        ? `siswa_${identifier}`
         : `siswa_${newSiswa.id.replace(/-/g, '').slice(0, 6)}`
 
-      // Password Default: 'Paud@' + NIS (jika ada NIS) ATAU Random Password
-      const plainPassword = nis ? `Paud@${nis}` : generateRandomPassword(6)
+      // Password Default: 'Paud@' + identifier ATAU Random Password
+      const plainPassword = identifier ? `Paud@${identifier}` : generateRandomPassword(6)
 
       // Hash Password
       const hashedPassword = await bcrypt.hash(plainPassword, 10)
 
-      //Otomatis Buat Akun User untuk Siswa ini
+      // Otomatis Buat Akun User untuk Siswa ini
       const newUser = await prisma.user.create({
         data: {
           username,
           password: hashedPassword,
           nama: namaLengkap,
           role: 'SISWA',
-          siswaId: newSiswa.id, // Relasikan ke Siswa yang baru dibuat
+          siswaId: newSiswa.id,
         },
         select: {
           id: true,
@@ -193,13 +228,13 @@ export default class SiswaController {
         where: { id: params.id },
         include: {
           kelas: true,
-          spp: {
+          transaksiSpp: {
             orderBy: { createdAt: 'desc' },
             take: 5, // 5 Transaksi SPP terakhir
           },
-          tabungan: {
+          mutasiTabungan: {
             orderBy: { createdAt: 'desc' },
-            take: 5, // 5 Mutasi Tabungan terakhir
+            take: 5, 
           },
         },
       })
@@ -230,14 +265,39 @@ export default class SiswaController {
    */
   public async update({ params, request, response }: HttpContext) {
     try {
-      const { nis, namaLengkap, namaOrangTua, kelasId } = request.body()
+      const {
+        nis,
+        nisn,
+        namaLengkap,
+        namaOrangTua,
+        alamat,
+        tinggiBadan,
+        beratBadan,
+        lingkarKepala,
+        semester,
+        tahunAjaran,
+        kelasId,
+      } = request.body()
 
       const updatedSiswa = await prisma.siswa.update({
         where: { id: params.id },
         data: {
           ...(nis !== undefined && { nis }),
+          ...(nisn !== undefined && { nisn }),
           ...(namaLengkap && { namaLengkap }),
           ...(namaOrangTua && { namaOrangTua }),
+          ...(alamat !== undefined && { alamat }),
+          ...(tinggiBadan !== undefined && {
+            tinggiBadan: tinggiBadan ? parseFloat(tinggiBadan) : null,
+          }),
+          ...(beratBadan !== undefined && {
+            beratBadan: beratBadan ? parseFloat(beratBadan) : null,
+          }),
+          ...(lingkarKepala !== undefined && {
+            lingkarKepala: lingkarKepala ? parseFloat(lingkarKepala) : null,
+          }),
+          ...(semester !== undefined && { semester }),
+          ...(tahunAjaran !== undefined && { tahunAjaran }),
           ...(kelasId !== undefined && { kelasId }),
         },
         include: {
