@@ -199,6 +199,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/kelas_controller').default['show']>>>
     }
   }
+  'pembayaran_spp_les.matriks': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/pembayaran-spp-les/matriks'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/pembayaran_spp_les_controller').default['matriks']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/pembayaran_spp_les_controller').default['matriks']>>>
+    }
+  }
   'pembayaran_spp_les.index': {
     methods: ["GET","HEAD"]
     pattern: '/api/v1/pembayaran-spp-les'

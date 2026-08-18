@@ -102,6 +102,12 @@ const routes = {
     tokens: [{"old":"/api/v1/kelas/:id","type":0,"val":"api","end":""},{"old":"/api/v1/kelas/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/kelas/:id","type":0,"val":"kelas","end":""},{"old":"/api/v1/kelas/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['kelas.show']['types'],
   },
+  'pembayaran_spp_les.matriks': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/pembayaran-spp-les/matriks',
+    tokens: [{"old":"/api/v1/pembayaran-spp-les/matriks","type":0,"val":"api","end":""},{"old":"/api/v1/pembayaran-spp-les/matriks","type":0,"val":"v1","end":""},{"old":"/api/v1/pembayaran-spp-les/matriks","type":0,"val":"pembayaran-spp-les","end":""},{"old":"/api/v1/pembayaran-spp-les/matriks","type":0,"val":"matriks","end":""}],
+    types: placeholder as Registry['pembayaran_spp_les.matriks']['types'],
+  },
   'pembayaran_spp_les.index': {
     methods: ["GET","HEAD"],
     pattern: '/api/v1/pembayaran-spp-les',

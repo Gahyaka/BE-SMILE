@@ -111,6 +111,7 @@ model TransaksiSpp {
 
   bulan Int? // Opsional jika bayar berdasarkan tanggal
   tahun Int? // e.g. 2026
+  tahunAjaran   String? @map("tahun_ajaran")
 
   // Field Rincian Pembayaran
   nominalSpp Decimal @default(0) @map("nominal_spp") @db.Decimal(12, 2)
@@ -130,7 +131,8 @@ model TransaksiSpp {
 
   siswa   Siswa @relation(fields: [siswaId], references: [id], onDelete: Cascade)
   petugas User? @relation(fields: [petugasId], references: [id], onDelete: SetNull)
-
+  
+  @@unique([siswaId, bulan, tahun], name: "unique_pembayaran_bulan_tahun")
   @@map("transaksi_spp")
 }
 

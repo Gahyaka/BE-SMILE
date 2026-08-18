@@ -48,6 +48,7 @@ export interface ApiDefinition {
     destroy: typeof routes['kelas.destroy']
   }
   pembayaranSppLes: {
+    matriks: typeof routes['pembayaran_spp_les.matriks']
     index: typeof routes['pembayaran_spp_les.index']
     store: typeof routes['pembayaran_spp_les.store']
     update: typeof routes['pembayaran_spp_les.update']

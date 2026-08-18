@@ -45,7 +45,7 @@ router.group(() => {
       router.get('/siswa', [SiswaController, 'index'])
       router.get('/siswa/:id', [SiswaController, 'show'])
       router.get('/kelas/:id', [KelasController, 'show'])
-
+      router.get('/pembayaran-spp-les/matriks', [PembayaranSppLesController, 'matriks'])
       router.get('/pembayaran-spp-les', [PembayaranSppLesController, 'index'])
   }).use(middleware.role({ roles: ['ADMIN_ADMINISTRASI', 'ADMIN_TRANSAKSI', 'GURU'] }))
 

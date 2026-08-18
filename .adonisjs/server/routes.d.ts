@@ -20,6 +20,7 @@ export type ScannedRoutes = {
     'siswa.index': { paramsTuple?: []; params?: {} }
     'siswa.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'kelas.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'pembayaran_spp_les.matriks': { paramsTuple?: []; params?: {} }
     'pembayaran_spp_les.index': { paramsTuple?: []; params?: {} }
     'murojaah.store_kategori': { paramsTuple?: []; params?: {} }
     'murojaah.update_kategori': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -76,6 +77,7 @@ export type ScannedRoutes = {
     'siswa.index': { paramsTuple?: []; params?: {} }
     'siswa.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'kelas.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'pembayaran_spp_les.matriks': { paramsTuple?: []; params?: {} }
     'pembayaran_spp_les.index': { paramsTuple?: []; params?: {} }
     'tabungan.summary': { paramsTuple?: []; params?: {} }
     'tabungan.show_by_siswa': { paramsTuple: [ParamValue]; params: {'siswaId': ParamValue} }
@@ -93,6 +95,7 @@ export type ScannedRoutes = {
     'siswa.index': { paramsTuple?: []; params?: {} }
     'siswa.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'kelas.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'pembayaran_spp_les.matriks': { paramsTuple?: []; params?: {} }
     'pembayaran_spp_les.index': { paramsTuple?: []; params?: {} }
     'tabungan.summary': { paramsTuple?: []; params?: {} }
     'tabungan.show_by_siswa': { paramsTuple: [ParamValue]; params: {'siswaId': ParamValue} }
