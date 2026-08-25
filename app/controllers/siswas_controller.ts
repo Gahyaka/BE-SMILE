@@ -1,15 +1,15 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import prisma from '#services/prisma_service'
-import bcrypt from 'bcryptjs'
+// import bcrypt from 'bcryptjs'
 
-function generateRandomPassword(length = 6): string {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
-  let result = ''
-  for (let i = 0; i < length; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length))
-  }
-  return result
-}
+// function generateRandomPassword(length = 6): string {
+//   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+//   let result = ''
+//   for (let i = 0; i < length; i++) {
+//     result += chars.charAt(Math.floor(Math.random() * chars.length))
+//   }
+//   return result
+// }
 
 export default class SiswaController {
   /**
@@ -196,44 +196,44 @@ export default class SiswaController {
       })
 
       // Generate Username: prioritas NISN -> NIS -> Random ID
-      const identifier = nisn || nis
-      const username = identifier
-        ? `siswa_${identifier}`
-        : `siswa_${newSiswa.id.replace(/-/g, '').slice(0, 6)}`
+      // const identifier = nisn || nis
+      // const username = identifier
+      //   ? `siswa_${identifier}`
+      //   : `siswa_${newSiswa.id.replace(/-/g, '').slice(0, 6)}`
 
-      // Password Default: 'Paud@' + identifier ATAU Random Password
-      const plainPassword = identifier ? `Paud@${identifier}` : generateRandomPassword(6)
+      // // Password Default: 'Paud@' + identifier ATAU Random Password
+      // const plainPassword = identifier ? `Paud@${identifier}` : generateRandomPassword(6)
 
-      // Hash Password
-      const hashedPassword = await bcrypt.hash(plainPassword, 10)
+      // // Hash Password
+      // const hashedPassword = await bcrypt.hash(plainPassword, 10)
 
-      // Otomatis Buat Akun User untuk Siswa ini
-      const newUser = await prisma.user.create({
-        data: {
-          username,
-          password: hashedPassword,
-          nama: namaLengkap,
-          role: 'SISWA',
-          siswaId: newSiswa.id,
-        },
-        select: {
-          id: true,
-          username: true,
-          role: true,
-        },
-      })
+      // // Otomatis Buat Akun User untuk Siswa ini
+      // const newUser = await prisma.user.create({
+      //   data: {
+      //     username,
+      //     password: hashedPassword,
+      //     nama: namaLengkap,
+      //     role: 'SISWA',
+      //     siswaId: newSiswa.id,
+      //   },
+      //   select: {
+      //     id: true,
+      //     username: true,
+      //     role: true,
+      //   },
+      // })
 
       return response.created({
         success: true,
         message: 'Berhasil menambahkan data dan membuat akun siswa',
         data: {
           siswa: newSiswa,
-          account: {
-            userId: newUser.id,
-            username: newUser.username,
-            defaultPassword: plainPassword,
-            role: newUser.role,
-          },
+          // account: {
+          //   userId: newUser.id,
+          //   username: newUser.username,
+          //   defaultPassword: plainPassword,
+          //   role: newUser.role,
+          // },
         },
       })
     } catch (error: any) {
