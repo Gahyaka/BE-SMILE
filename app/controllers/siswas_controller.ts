@@ -56,11 +56,12 @@ export default class SiswaController {
    * GET /api/v1/siswa (Get All Siswa)
    */
   public async index({ request, response }: HttpContext) {
-    try {
-      const { search, kelasId } = request.qs()
+      try {
+        const authUser = (request as any).authUser
+        const { search, kelasId } = request.qs()
 
-      const siswaList = await prisma.siswa.findMany({
-        where: {
+        // 1. Kondisi filter dasar
+        let whereCondition: any = {
           ...(kelasId && { kelasId }),
           ...(search && {
             OR: [
@@ -69,33 +70,58 @@ export default class SiswaController {
               { nisn: { contains: search } },
             ],
           }),
-        },
-        include: {
-          kelas: {
-            select: {
-              id: true,
-              namaKelas: true,
-              tahunAjaran: true,
-              waliKelas: true,
+        }
+
+        // 2. Jika role GURU: Batasi hanya melihat siswa di kelas yang dia ampu
+        if (authUser?.role === 'GURU') {
+          // Cari kelas yang wali kelasnya sesuai dengan user login (cek by ID atau nama jika relasi string)
+          const kelasDiampu = await prisma.kelas.findMany({
+            where: {
+              OR: [
+                { guruId: authUser.id },
+                { waliKelas: authUser.namaLengkap || authUser.nama || '' },
+              ],
+            },
+            select: { id: true },
+          })
+
+          const allowedKelasIds = kelasDiampu.map((k: any) => k.id)
+
+          // Sisipkan filter kelasId agar hanya menampilkan anak didiknya
+          whereCondition.kelasId = {
+            in: allowedKelasIds,
+          }
+        }
+
+        // 3. Eksekusi query dengan filter yang sudah disesuaikan
+        const siswaList = await prisma.siswa.findMany({
+          where: whereCondition,
+          include: {
+            kelas: {
+              select: {
+                id: true,
+                namaKelas: true,
+                tahunAjaran: true,
+                waliKelas: true,
+              },
             },
           },
-        },
-        orderBy: { namaLengkap: 'asc' },
-      })
+          orderBy: { namaLengkap: 'asc' },
+        })
 
-      return response.ok({
-        success: true,
-        message: 'Berhasil mengambil data siswa',
-        data: siswaList,
-      })
-    } catch (error: any) {
-      return response.internalServerError({
-        success: false,
-        message: 'Gagal mengambil data siswa',
-        error: error.message,
-      })
+        return response.ok({
+          success: true,
+          message: 'Berhasil mengambil data siswa',
+          data: siswaList,
+        })
+      } catch (error: any) {
+        return response.internalServerError({
+          success: false,
+          message: 'Gagal mengambil data siswa',
+          error: error.message,
+        })
+      }
     }
-  }
 
   /**
    * POST /api/v1/siswa (Tambah Siswa Baru)

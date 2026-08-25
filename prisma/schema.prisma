@@ -53,6 +53,7 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  kelasAmpu Kelas[]  @relation("WaliKelasRelasi")
   // Log Petugas yang menginput transaksi
   pembayaranSpp  TransaksiSpp[]
   mutasiTabungan MutasiTabungan[]
@@ -68,6 +69,10 @@ model Kelas {
   namaKelas   String   @map("nama_kelas") // misal: "Kelas A - Bintang"
   waliKelas   String?  @map("wali_kelas")
   tahunAjaran String   @map("tahun_ajaran") // misal: "2025/2026"
+  // Relasi ke User (Guru)
+  guruId      String?  @map("guru_id")
+  guru        User?    @relation("WaliKelasRelasi", fields: [guruId], references: [id], onDelete: SetNull)
+
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
