@@ -218,6 +218,7 @@ model PenilaianMurojaah {
 model KegiatanDokumentasi {
   id              String            @id @default(uuid())
   namaKegiatan    String            @map("nama_kegiatan")
+  kategori        String            @map("kategori")
   tanggalKegiatan DateTime          @default(now()) @map("tanggal_kegiatan")
   deskripsi       String?           @db.Text
   gdriveFolderId  String?           @map("gdrive_folder_id")

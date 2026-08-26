@@ -88,6 +88,7 @@ export default class DokumentasiController {
     try {
       const authUser = (request as any).authUser
       const namaKegiatan = request.input('namaKegiatan')
+      const kategori = request.input('kategori')
       const deskripsi = request.input('deskripsi')
       const tanggalKegiatan = request.input('tanggalKegiatan')
 
@@ -180,6 +181,7 @@ export default class DokumentasiController {
         kegiatan = await prisma.kegiatanDokumentasi.create({
           data: {
             namaKegiatan,
+            kategori,
             deskripsi,
             tanggalKegiatan: tanggalKegiatan ? new Date(tanggalKegiatan) : new Date(),
             gdriveFolderId: folderId,
@@ -224,8 +226,9 @@ export default class DokumentasiController {
         return response.notFound({ success: false, message: 'Kegiatan tidak ditemukan' })
       }
 
-      const { namaKegiatan, deskripsi, tanggalKegiatan } = request.only([
+      const { namaKegiatan, kategori, deskripsi, tanggalKegiatan } = request.only([
         'namaKegiatan',
+        'kategori',
         'deskripsi',
         'tanggalKegiatan',
       ])
@@ -240,6 +243,7 @@ export default class DokumentasiController {
         where: { id: kegiatan.id },
         data: {
           namaKegiatan: namaKegiatan || kegiatan.namaKegiatan,
+          kategori: kategori || kegiatan.kategori,
           deskripsi: deskripsi !== undefined ? deskripsi : kegiatan.deskripsi,
           tanggalKegiatan: tanggalKegiatan ? new Date(tanggalKegiatan) : kegiatan.tanggalKegiatan,
         },
