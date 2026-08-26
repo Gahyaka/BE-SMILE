@@ -238,7 +238,11 @@ export default class SiswaController {
             message: 'File Excel yang diunggah kosong',
           })
         }
-
+        const existingSiswa = await prisma.siswa.findMany({
+          select: { nis: true },
+        })
+        const registeredNis = new Set(existingSiswa.map((s) => s.nis).filter(Boolean))
+        const skippedRows: string[] = []
         const listSiswaBaru: any[] = []
         const errors: string[] = []
 
@@ -261,10 +265,15 @@ export default class SiswaController {
           const semester = row['Semester'] || row['semester'] ? String(row['Semester'] || row['semester']).trim() : null
           const tahunAjaran = row['Tahun Ajaran'] || row['tahunAjaran'] ? String(row['Tahun Ajaran'] || row['tahunAjaran']).trim() : null
 
+
           if (!namaLengkap) {
             errors.push(`Baris ${rowNumber}: Kolom 'Nama Lengkap' wajib diisi`)
             continue
           }
+          if (nis && registeredNis.has(nis)) {
+          skippedRows.push(`Baris ${rowNumber}: NIS ${nis} (${namaLengkap}) sudah ada di database`)
+          continue
+        }
           if (!namaLengkap || String(namaLengkap).toLowerCase() === 'contoh' || String(namaLengkap).toLowerCase() === 'nama siswa contoh') {
             continue
           }
@@ -302,7 +311,9 @@ export default class SiswaController {
           message: `Berhasil mengimpor ${inserted.count} data siswa`,
           data: {
             totalBerhasil: inserted.count,
+            totalDilewati: skippedRows.length,
             totalGagal: errors.length,
+            skippedRows: skippedRows.length > 0 ? skippedRows : undefined,
             errors: errors.length > 0 ? errors : undefined,
           },
         })
