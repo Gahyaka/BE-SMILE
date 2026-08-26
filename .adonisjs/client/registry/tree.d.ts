@@ -36,6 +36,8 @@ export interface ApiDefinition {
     me: typeof routes['siswa.me']
     index: typeof routes['siswa.index']
     show: typeof routes['siswa.show']
+    importExcel: typeof routes['siswa.import_excel']
+    downloadTemplate: typeof routes['siswa.download_template']
     store: typeof routes['siswa.store']
     update: typeof routes['siswa.update']
     destroy: typeof routes['siswa.destroy']

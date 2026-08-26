@@ -198,6 +198,18 @@ const routes = {
     tokens: [{"old":"/api/v1/kelas/:id","type":0,"val":"api","end":""},{"old":"/api/v1/kelas/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/kelas/:id","type":0,"val":"kelas","end":""},{"old":"/api/v1/kelas/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['kelas.destroy']['types'],
   },
+  'siswa.import_excel': {
+    methods: ["POST"],
+    pattern: '/api/v1/siswas/import',
+    tokens: [{"old":"/api/v1/siswas/import","type":0,"val":"api","end":""},{"old":"/api/v1/siswas/import","type":0,"val":"v1","end":""},{"old":"/api/v1/siswas/import","type":0,"val":"siswas","end":""},{"old":"/api/v1/siswas/import","type":0,"val":"import","end":""}],
+    types: placeholder as Registry['siswa.import_excel']['types'],
+  },
+  'siswa.download_template': {
+    methods: ["GET","HEAD"],
+    pattern: '/api/v1/siswas/template',
+    tokens: [{"old":"/api/v1/siswas/template","type":0,"val":"api","end":""},{"old":"/api/v1/siswas/template","type":0,"val":"v1","end":""},{"old":"/api/v1/siswas/template","type":0,"val":"siswas","end":""},{"old":"/api/v1/siswas/template","type":0,"val":"template","end":""}],
+    types: placeholder as Registry['siswa.download_template']['types'],
+  },
   'siswa.store': {
     methods: ["POST"],
     pattern: '/api/v1/siswa',

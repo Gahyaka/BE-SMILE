@@ -1,5 +1,8 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import prisma from '#services/prisma_service'
+import * as XLSX from 'xlsx'
+import fs from 'node:fs/promises'
+import ExcelJS from 'exceljs'
 // import bcrypt from 'bcryptjs'
 
 // function generateRandomPassword(length = 6): string {
@@ -122,7 +125,206 @@ export default class SiswaController {
         })
       }
     }
+    /**
+   * GET /api/siswas/template
+   */
+    public async downloadTemplate({ response }: HttpContext) {
+        const workbook = new ExcelJS.Workbook()
+        const worksheet = workbook.addWorksheet('Template Siswa')
 
+        // 1. Definisikan Kolom & Lebar Otomatis
+        worksheet.columns = [
+          { header: 'NIS', key: 'nis', width: 15 },
+          { header: 'NISN', key: 'nisn', width: 18 },
+          { header: 'Nama Lengkap', key: 'namaLengkap', width: 25 },
+          { header: 'Nama Orang Tua', key: 'namaOrangTua', width: 22 },
+          { header: 'Alamat', key: 'alamat', width: 30 },
+          { header: 'Tinggi Badan', key: 'tinggiBadan', width: 16 },
+          { header: 'Berat Badan', key: 'beratBadan', width: 16 },
+          { header: 'Lingkar Kepala', key: 'lingkarKepala', width: 16 },
+          { header: 'Semester', key: 'semester', width: 14 },
+          { header: 'Tahun Ajaran', key: 'tahunAjaran', width: 16 },
+        ]
+
+        // 2. Beri Style Khusus pada Baris Header (Baris 1)
+        const headerRow = worksheet.getRow(1)
+        headerRow.height = 24
+
+        headerRow.eachCell((cell) => {
+          // Background Hijau Lembut (Sage Green / Tea Green seperti foto)
+          cell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'FFC8E6C9' }, // Warna hijau muda
+          }
+          // Font Tebal
+          cell.font = {
+            name: 'Calibri',
+            size: 11,
+            bold: true,
+            color: { argb: 'FF000000' },
+          }
+          // Rata Tengah Vertikal & Horizontal
+          cell.alignment = {
+            vertical: 'middle',
+            horizontal: 'center',
+          }
+          // Border Tipis di Sekeliling Sel
+          cell.border = {
+            top: { style: 'thin', color: { argb: 'FF9E9E9E' } },
+            left: { style: 'thin', color: { argb: 'FF9E9E9E' } },
+            bottom: { style: 'thin', color: { argb: 'FF9E9E9E' } },
+            right: { style: 'thin', color: { argb: 'FF9E9E9E' } },
+          }
+        })
+
+        // 3. Generate Buffer & Kirim Response
+        const buffer = await workbook.xlsx.writeBuffer()
+
+        response.header('Content-Disposition', 'attachment; filename="template_import_siswa.xlsx"')
+        response.header('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
+        return response.send(Buffer.from(buffer))
+      }
+   /**
+   * POST /api/siswa/import
+   */
+  public async importExcel({ request, response }: HttpContext) {
+      
+      try {
+        const file = request.file('file', {
+          size: '5mb',
+          extnames: ['xlsx', 'xls', 'csv'],
+        })
+
+        const { kelasId } = request.body()
+
+        if (!file || !file.isValid) {
+          return response.badRequest({
+            success: false,
+            message: file ? file.errors[0]?.message : 'File Excel wajib diunggah',
+          })
+        }
+
+        if (!kelasId) {
+          return response.badRequest({
+            success: false,
+            message: 'Pilih kelas tujuan (kelasId wajib diisi)',
+          })
+        }
+
+        // Validasi kelas exists
+        const kelasExists = await prisma.kelas.findUnique({
+          where: { id: kelasId },
+        })
+
+        if (!kelasExists) {
+          return response.badRequest({
+            success: false,
+            message: 'Kelas yang dipilih tidak ditemukan di database',
+          })
+        }
+
+        // Baca File Excel
+        const fileBuffer = await fs.readFile(file.tmpPath!)
+        const workbook = XLSX.read(fileBuffer, { type: 'buffer' })
+        const sheetName = workbook.SheetNames[0]
+        const worksheet = workbook.Sheets[sheetName]
+        const rawData: any[] = XLSX.utils.sheet_to_json(worksheet)
+
+        if (rawData.length === 0) {
+          return response.badRequest({
+            success: false,
+            message: 'File Excel yang diunggah kosong',
+          })
+        }
+        const existingSiswa = await prisma.siswa.findMany({
+          select: { nis: true },
+        })
+        const registeredNis = new Set(existingSiswa.map((s) => s.nis).filter(Boolean))
+        const skippedRows: string[] = []
+        const listSiswaBaru: any[] = []
+        const errors: string[] = []
+
+        // Parsing & Validasi Tiap Baris
+        for (let i = 0; i < rawData.length; i++) {
+          const row = rawData[i]
+          const rowNumber = i + 2 // Baris di Excel (Header = 1)
+
+          const namaLengkap = row['Nama Lengkap'] || row['namaLengkap']
+          const nis = row['NIS'] || row['nis'] ? String(row['NIS'] || row['nis']).trim() : null
+          const nisn = row['NISN'] || row['nisn'] ? String(row['NISN'] || row['nisn']).trim() : null
+          const namaOrangTua = row['Nama Orang Tua'] || row['namaOrangTua'] || null
+          const alamat = row['Alamat'] || row['alamat'] || null
+          
+          // Konversi angka (Float / Int)
+          const tinggiBadan = row['Tinggi Badan'] || row['tinggiBadan'] ? parseFloat(row['Tinggi Badan'] || row['tinggiBadan']) : null
+          const beratBadan = row['Berat Badan'] || row['beratBadan'] ? parseFloat(row['Berat Badan'] || row['beratBadan']) : null
+          const lingkarKepala = row['Lingkar Kepala'] || row['lingkarKepala'] ? parseFloat(row['Lingkar Kepala'] || row['lingkarKepala']) : null
+          
+          const semester = row['Semester'] || row['semester'] ? String(row['Semester'] || row['semester']).trim() : null
+          const tahunAjaran = row['Tahun Ajaran'] || row['tahunAjaran'] ? String(row['Tahun Ajaran'] || row['tahunAjaran']).trim() : null
+
+
+          if (!namaLengkap) {
+            errors.push(`Baris ${rowNumber}: Kolom 'Nama Lengkap' wajib diisi`)
+            continue
+          }
+          if (nis && registeredNis.has(nis)) {
+          skippedRows.push(`Baris ${rowNumber}: NIS ${nis} (${namaLengkap}) sudah ada di database`)
+          continue
+        }
+          if (!namaLengkap || String(namaLengkap).toLowerCase() === 'contoh' || String(namaLengkap).toLowerCase() === 'nama siswa contoh') {
+            continue
+          }
+          listSiswaBaru.push({
+            nis,
+            nisn,
+            namaLengkap: String(namaLengkap).trim(),
+            namaOrangTua: namaOrangTua ? String(namaOrangTua).trim() : null,
+            alamat: alamat ? String(alamat).trim() : null,
+            tinggiBadan,
+            beratBadan,
+            lingkarKepala,
+            semester,
+            tahunAjaran,
+            kelasId,
+          })
+        }
+
+        if (errors.length > 0 && listSiswaBaru.length === 0) {
+          return response.badRequest({
+            success: false,
+            message: 'Semua baris data tidak valid',
+            errors,
+          })
+        }
+
+        // Simpan massal
+        const inserted = await prisma.siswa.createMany({
+          data: listSiswaBaru,
+          skipDuplicates: true,
+        })
+
+        return response.created({
+          success: true,
+          message: `Berhasil mengimpor ${inserted.count} data siswa`,
+          data: {
+            totalBerhasil: inserted.count,
+            totalDilewati: skippedRows.length,
+            totalGagal: errors.length,
+            skippedRows: skippedRows.length > 0 ? skippedRows : undefined,
+            errors: errors.length > 0 ? errors : undefined,
+          },
+        })
+      } catch (error: any) {
+        return response.internalServerError({
+          success: false,
+          message: 'Gagal memproses file Excel',
+          error: error.message,
+        })
+      }
+    }
   /**
    * POST /api/v1/siswa (Tambah Siswa Baru)
    */

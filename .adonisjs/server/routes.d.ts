@@ -36,6 +36,8 @@ export type ScannedRoutes = {
     'kelas.store': { paramsTuple?: []; params?: {} }
     'kelas.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'kelas.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'siswa.import_excel': { paramsTuple?: []; params?: {} }
+    'siswa.download_template': { paramsTuple?: []; params?: {} }
     'siswa.store': { paramsTuple?: []; params?: {} }
     'siswa.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'siswa.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -60,6 +62,7 @@ export type ScannedRoutes = {
     'murojaah.save_nilai': { paramsTuple?: []; params?: {} }
     'dokumentasi.store': { paramsTuple?: []; params?: {} }
     'kelas.store': { paramsTuple?: []; params?: {} }
+    'siswa.import_excel': { paramsTuple?: []; params?: {} }
     'siswa.store': { paramsTuple?: []; params?: {} }
     'pembayaran_spp_les.store': { paramsTuple?: []; params?: {} }
     'tabungan.store_mutasi': { paramsTuple?: []; params?: {} }
@@ -79,6 +82,7 @@ export type ScannedRoutes = {
     'kelas.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'pembayaran_spp_les.matriks': { paramsTuple?: []; params?: {} }
     'pembayaran_spp_les.index': { paramsTuple?: []; params?: {} }
+    'siswa.download_template': { paramsTuple?: []; params?: {} }
     'tabungan.summary': { paramsTuple?: []; params?: {} }
     'tabungan.show_by_siswa': { paramsTuple: [ParamValue]; params: {'siswaId': ParamValue} }
   }
@@ -97,6 +101,7 @@ export type ScannedRoutes = {
     'kelas.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'pembayaran_spp_les.matriks': { paramsTuple?: []; params?: {} }
     'pembayaran_spp_les.index': { paramsTuple?: []; params?: {} }
+    'siswa.download_template': { paramsTuple?: []; params?: {} }
     'tabungan.summary': { paramsTuple?: []; params?: {} }
     'tabungan.show_by_siswa': { paramsTuple: [ParamValue]; params: {'siswaId': ParamValue} }
   }
