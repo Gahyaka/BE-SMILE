@@ -391,6 +391,30 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/kelas_controller').default['destroy']>>>
     }
   }
+  'siswa.import_excel': {
+    methods: ["POST"]
+    pattern: '/api/v1/siswas/import'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/siswas_controller').default['importExcel']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/siswas_controller').default['importExcel']>>>
+    }
+  }
+  'siswa.download_template': {
+    methods: ["GET","HEAD"]
+    pattern: '/api/v1/siswas/template'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/siswas_controller').default['downloadTemplate']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/siswas_controller').default['downloadTemplate']>>>
+    }
+  }
   'siswa.store': {
     methods: ["POST"]
     pattern: '/api/v1/siswa'

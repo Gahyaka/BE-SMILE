@@ -72,9 +72,12 @@ router.group(() => {
       router.put('/kelas/:id', [KelasController, 'update'])
       router.delete('/kelas/:id', [KelasController, 'destroy'])
 
+      router.post('/siswas/import', [SiswaController, 'importExcel'])
+      router.get('/siswas/template', [SiswaController, 'downloadTemplate'])
       router.post('/siswa', [SiswaController, 'store'])
       router.put('/siswa/:id', [SiswaController, 'update'])
       router.delete('/siswa/:id', [SiswaController, 'destroy'])
+
 
       router.put('/users/:id/reset-password', [AuthController, 'resetPassword'])
       router.patch('/dokumentasi/:id/toggle-public', [DokumentasiController, 'togglePublicGallery'])
