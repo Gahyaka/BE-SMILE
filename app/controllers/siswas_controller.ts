@@ -137,6 +137,7 @@ export default class SiswaController {
           { header: 'NIS', key: 'nis', width: 15 },
           { header: 'NISN', key: 'nisn', width: 18 },
           { header: 'Nama Lengkap', key: 'namaLengkap', width: 25 },
+          { header: 'Jenis Kelamin(L/P)', key: 'jenisKelamin', width: 15 },
           { header: 'Nama Orang Tua', key: 'namaOrangTua', width: 22 },
           { header: 'Alamat', key: 'alamat', width: 30 },
           { header: 'Tinggi Badan', key: 'tinggiBadan', width: 16 },
@@ -256,6 +257,7 @@ export default class SiswaController {
           const nisn = row['NISN'] || row['nisn'] ? String(row['NISN'] || row['nisn']).trim() : null
           const namaOrangTua = row['Nama Orang Tua'] || row['namaOrangTua'] || null
           const alamat = row['Alamat'] || row['alamat'] || null
+          const jenisKelamin = row['Jenis Kelamin'] || row['jenisKelamin'] || row['JK'] || row['jk'] || null
           
           // Konversi angka (Float / Int)
           const tinggiBadan = row['Tinggi Badan'] || row['tinggiBadan'] ? parseFloat(row['Tinggi Badan'] || row['tinggiBadan']) : null
@@ -283,6 +285,7 @@ export default class SiswaController {
             namaLengkap: String(namaLengkap).trim(),
             namaOrangTua: namaOrangTua ? String(namaOrangTua).trim() : null,
             alamat: alamat ? String(alamat).trim() : null,
+            jenisKelamin: jenisKelamin ? String(jenisKelamin).toUpperCase().trim() : null,
             tinggiBadan,
             beratBadan,
             lingkarKepala,
@@ -334,6 +337,7 @@ export default class SiswaController {
         nis,
         nisn,
         namaLengkap,
+        jenisKelamin,
         namaOrangTua,
         alamat,
         tinggiBadan,
@@ -383,6 +387,7 @@ export default class SiswaController {
           nis: nis || null,
           nisn: nisn || null,
           namaLengkap,
+          jenisKelamin: jenisKelamin ? String(jenisKelamin).toUpperCase().trim() : null,
           namaOrangTua,
           alamat: alamat || null,
           tinggiBadan: tinggiBadan ? parseFloat(tinggiBadan) : null,
@@ -497,6 +502,7 @@ export default class SiswaController {
         nis,
         nisn,
         namaLengkap,
+        jenisKelamin,
         namaOrangTua,
         alamat,
         tinggiBadan,
@@ -513,6 +519,9 @@ export default class SiswaController {
           ...(nis !== undefined && { nis }),
           ...(nisn !== undefined && { nisn }),
           ...(namaLengkap && { namaLengkap }),
+          ...(jenisKelamin !== undefined && {
+              jenisKelamin: jenisKelamin ? String(jenisKelamin).toUpperCase().trim() : null,
+            }),
           ...(namaOrangTua && { namaOrangTua }),
           ...(alamat !== undefined && { alamat }),
           ...(tinggiBadan !== undefined && {

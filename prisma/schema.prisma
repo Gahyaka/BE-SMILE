@@ -86,6 +86,7 @@ model Siswa {
   nis          String? @unique
   nisn          String?   @unique
   namaLengkap  String  @map("nama_lengkap")
+  jenisKelamin String?  @map("jenis_kelamin")
   namaOrangTua String  @map("nama_orang_tua")
   alamat        String?
   tinggiBadan   Float?
