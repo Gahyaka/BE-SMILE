@@ -185,7 +185,7 @@ export default class PembayaranSppLesController {
    * POST /api/v1/pembayaran-spp-les
    * Simpan Pembayaran SPP & Les Baru (Support Single & Multi-Bulan)
    */
-  public async store({ request, response }: HttpContext) {
+public async store({ request, response }: HttpContext) {
     try {
       const authUser = (request as any).authUser
 
@@ -242,21 +242,21 @@ export default class PembayaranSppLesController {
           })
         }
 
-        // Cek apakah ada bulan yang sudah pernah dibayar sebelumnya (Anti Duplikasi)
+        // 1. Ambil semua data (aktif maupun soft-deleted) untuk bulan yang diminta
         const existingPayments = await prisma.transaksiSpp.findMany({
           where: {
             siswaId,
-            deletedAt: null,
             OR: bulanList.map((item: { bulan: number; tahun: number }) => ({
               bulan: Number(item.bulan),
               tahun: Number(item.tahun),
             })),
           },
-          select: { bulan: true, tahun: true },
         })
 
-        if (existingPayments.length > 0) {
-          const daftarBulanSudahBayar = existingPayments
+        // 2. Cek apakah ada yang statusnya MASIH AKTIF (deletedAt === null)
+        const activePayments = existingPayments.filter((p) => p.deletedAt === null)
+        if (activePayments.length > 0) {
+          const daftarBulanSudahBayar = activePayments
             .map((p) => `Bulan ${p.bulan}/${p.tahun}`)
             .join(', ')
           return response.conflict({
@@ -265,28 +265,44 @@ export default class PembayaranSppLesController {
           })
         }
 
-        const dataBatch = bulanList.map((item: { bulan: number; tahun: number }) => ({
-          nomorKwitansi: generateKwitansi(),
-          siswaId,
-          tanggalBayar: dateObj,
-          bulan: Number(item.bulan),
-          tahun: Number(item.tahun),
-          tahunAjaran: tahunAjaran || '2026/2027',
-          nominalSpp: sppPerBulan,
-          nominalLes: lesPerBulan,
-          totalBayar: totalPerBulan,
-          catatan: catatan || `Pembayaran periode bulan ${item.bulan}/${item.tahun}`,
-          statusSetoran,
-          petugasId: validPetugasId,
-        }))
-
+        // 3. Eksekusi Upsert / Restore dalam transaksi database
         const createdBatch = await prisma.$transaction(
-          dataBatch.map((entry: any) =>
-            prisma.transaksiSpp.create({
-              data: entry,
+          bulanList.map((item: { bulan: number; tahun: number }) => {
+            const b = Number(item.bulan)
+            const t = Number(item.tahun)
+            const softDeleted = existingPayments.find(
+              (p) => p.bulan === b && p.tahun === t && p.deletedAt !== null
+            )
+
+            const payloadData = {
+              nomorKwitansi: generateKwitansi(),
+              siswaId,
+              tanggalBayar: dateObj,
+              bulan: b,
+              tahun: t,
+              tahunAjaran: tahunAjaran || '2026/2027',
+              nominalSpp: sppPerBulan,
+              nominalLes: lesPerBulan,
+              totalBayar: totalPerBulan,
+              catatan: catatan || `Pembayaran periode bulan ${b}/${t}`,
+              statusSetoran,
+              petugasId: validPetugasId,
+              deletedAt: null, // Pulihkan jika sebelumnya soft-deleted
+            }
+
+            if (softDeleted) {
+              return prisma.transaksiSpp.update({
+                where: { id: softDeleted.id },
+                data: payloadData,
+                include: { siswa: true },
+              })
+            }
+
+            return prisma.transaksiSpp.create({
+              data: payloadData,
               include: { siswa: true },
             })
-          )
+          })
         )
 
         return response.created({
@@ -296,20 +312,21 @@ export default class PembayaranSppLesController {
           data: createdBatch,
         })
       }
+
       const targetBulan = dateObj.getMonth() + 1
       const targetTahun = dateObj.getFullYear()
 
-      // Cek apakah bulan tersebut sudah pernah dibayar (Anti Duplikasi)
+      // Cek apakah bulan tersebut sudah ada di database
       const existingPayment = await prisma.transaksiSpp.findFirst({
         where: {
           siswaId,
           bulan: targetBulan,
           tahun: targetTahun,
-          deletedAt: null,
         },
       })
 
-      if (existingPayment) {
+      // Jika data ada dan MASIH AKTIF, tolak
+      if (existingPayment && existingPayment.deletedAt === null) {
         return response.conflict({
           success: false,
           message: `Siswa ini sudah membayar SPP untuk periode Bulan ${targetBulan}/${targetTahun}.`,
@@ -325,30 +342,43 @@ export default class PembayaranSppLesController {
         })
       }
 
-      const newTransaksi = await prisma.transaksiSpp.create({
-        data: {
-          nomorKwitansi: generateKwitansi(),
-          siswaId,
-          tanggalBayar: dateObj,
-          bulan: targetBulan,
-          tahun: targetTahun,
-          tahunAjaran: tahunAjaran || '2026/2027',
-          nominalSpp,
-          nominalLes,
-          totalBayar,
-          catatan,
-          statusSetoran,
-          petugasId: validPetugasId,
-        },
-        include: {
-          siswa: true,
-        },
-      })
+      const singlePayload = {
+        nomorKwitansi: generateKwitansi(),
+        siswaId,
+        tanggalBayar: dateObj,
+        bulan: targetBulan,
+        tahun: targetTahun,
+        tahunAjaran: tahunAjaran || '2026/2027',
+        nominalSpp,
+        nominalLes,
+        totalBayar,
+        catatan,
+        statusSetoran,
+        petugasId: validPetugasId,
+        deletedAt: null,
+      }
+
+      let resultTransaksi
+
+      if (existingPayment && existingPayment.deletedAt !== null) {
+        // Restore data lama yang pernah di-soft delete
+        resultTransaksi = await prisma.transaksiSpp.update({
+          where: { id: existingPayment.id },
+          data: singlePayload,
+          include: { siswa: true },
+        })
+      } else {
+        // Buat data baru
+        resultTransaksi = await prisma.transaksiSpp.create({
+          data: singlePayload,
+          include: { siswa: true },
+        })
+      }
 
       return response.created({
         success: true,
         message: 'Berhasil mencatat transaksi pembayaran SPP & Les',
-        data: newTransaksi,
+        data: resultTransaksi,
       })
     } catch (error: any) {
       return response.internalServerError({
