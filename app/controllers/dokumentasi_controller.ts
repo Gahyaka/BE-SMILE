@@ -45,31 +45,43 @@ export default class DokumentasiController {
    */
   public async show({ params, response }: HttpContext) {
     try {
-      const kegiatan = await prisma.kegiatanDokumentasi.findUnique({
-        where: { id: String(params.id) },
+      const dokumentasi = await prisma.kegiatanDokumentasi.findUnique({
+        where: { id: params.id },
         include: {
-          foto: true,
+          fotoKegiatan: {
+            select: {
+              id: true,
+              namaFile: true,
+              fileId: true,
+              urlFoto: true,
+              isSampul: true,
+              createdAt: true,
+            },
+            orderBy: {
+              createdAt: 'asc',
+            },
+          },
+          // Jika ingin menyertakan info nama pembuat/petugas
           petugas: {
             select: {
               id: true,
               nama: true,
-              username: true
             },
           },
         },
       })
 
-      if (!kegiatan) {
+      if (!dokumentasi) {
         return response.notFound({
           success: false,
-          message: 'Data kegiatan dokumentasi tidak ditemukan',
+          message: 'Data dokumentasi tidak ditemukan',
         })
       }
 
       return response.ok({
         success: true,
-        message: 'Berhasil mengambil detail kegiatan',
-        data: kegiatan,
+        message: 'Berhasil mengambil detail dokumentasi',
+        data: dokumentasi,
       })
     } catch (error: any) {
       return response.internalServerError({
@@ -85,131 +97,151 @@ export default class DokumentasiController {
    * POST /api/v1/dokumentasi
    */
   public async store({ request, response }: HttpContext) {
-    try {
-      const authUser = (request as any).authUser
-      const namaKegiatan = request.input('namaKegiatan')
-      const kategori = request.input('kategori')
-      const deskripsi = request.input('deskripsi')
-      const tanggalKegiatan = request.input('tanggalKegiatan')
+      try {
+        const authUser = (request as any).authUser
+        const namaKegiatan = request.input('namaKegiatan')
+        const kategori = request.input('kategori')
+        const deskripsi = request.input('deskripsi')
+        const tanggalKegiatan = request.input('tanggalKegiatan')
 
-      if (!namaKegiatan) {
-        return response.badRequest({ success: false, message: 'Nama kegiatan wajib diisi' })
-      }
+        if (!namaKegiatan) {
+          return response.badRequest({ success: false, message: 'Nama kegiatan wajib diisi' })
+        }
 
-      // Ambil file foto (support single maupun multiple)
-      const singleFoto = request.file('foto', {
-        size: '10mb',
-        extnames: ['jpg', 'png', 'jpeg', 'webp'],
-      })
-
-      const multiFoto = request.files('foto', {
-        size: '10mb',
-        extnames: ['jpg', 'png', 'jpeg', 'webp'],
-      })
-
-      let filesToUpload = multiFoto.length > 0 ? multiFoto : (singleFoto ? [singleFoto] : [])
-
-      if (filesToUpload.length === 0) {
-        return response.badRequest({
-          success: false,
-          message: 'Pilih minimal 1 file foto dokumentasi untuk diunggah',
+        // Ambil file foto (support single maupun multiple)
+        const singleFoto = request.file('foto', {
+          size: '10mb',
+          extnames: ['jpg', 'png', 'jpeg', 'webp'],
         })
-      }
 
-      // 1. Cek apakah kegiatan dengan nama yang sama sudah pernah dibuat
-    let kegiatan = await prisma.kegiatanDokumentasi.findFirst({
-    where: {
-        namaKegiatan: namaKegiatan,
-    },
-    })
+        const multiFoto = request.files('foto', {
+          size: '10mb',
+          extnames: ['jpg', 'png', 'jpeg', 'webp'],
+        })
 
-    let folderId: string | null | undefined
-    let folderUrl: string | null | undefined
+        let filesToUpload = multiFoto.length > 0 ? multiFoto : (singleFoto ? [singleFoto] : [])
 
-      if (kegiatan) {
-        // Jika sudah ada, gunakan ID & URL folder yang sudah ada
-        folderId = kegiatan.gdriveFolderId
-        folderUrl = kegiatan.gdriveFolderUrl
-      } else {
-        // Jika belum ada, buat folder baru di Google Drive
-        const gdriveFolder = await GDriveService.createFolder(namaKegiatan)
-        folderId = gdriveFolder.folderId
-        folderUrl = gdriveFolder.webViewLink
-      }
-
-      // 2. Upload file-file foto ke Google Drive (ke folder yang sesuai)
-      const uploadedPhotosData: any[] = []
-
-      for (const file of filesToUpload) {
-        if (file.tmpPath) {
-          const mimeType = file.headers['content-type'] || 'image/jpeg'
-          const fileName = file.clientName || `foto-${Date.now()}.jpg`
-
-          const uploaded = await GDriveService.uploadFile(
-            file.tmpPath,
-            fileName,
-            mimeType,
-            folderId!
-          )
-
-          uploadedPhotosData.push({
-            namaFile: fileName,
-            gdriveFileId: uploaded.fileId,
-            viewUrl: uploaded.viewUrl,
-            downloadUrl: uploaded.webViewLink,
+        if (filesToUpload.length === 0) {
+          return response.badRequest({
+            success: false,
+            message: 'Pilih minimal 1 file foto dokumentasi untuk diunggah',
           })
         }
-      }
 
-      // 3. Simpan relasi foto ke Database
-      if (kegiatan) {
-        // Jika kegiatan lama: Tambahkan foto baru ke kegiatan tersebut
-        kegiatan = await prisma.kegiatanDokumentasi.update({
-          where: { id: kegiatan.id },
-          data: {
-            deskripsi: deskripsi || kegiatan.deskripsi,
-            foto: {
-              create: uploadedPhotosData,
-            },
-          },
-          include: {
-            foto: true,
+        // 1. Cek apakah kegiatan dengan nama yang sama sudah pernah dibuat
+        let kegiatan = await prisma.kegiatanDokumentasi.findFirst({
+          where: {
+            namaKegiatan: namaKegiatan,
           },
         })
-      } else {
-        // Jika kegiatan baru: Buat record baru
-        kegiatan = await prisma.kegiatanDokumentasi.create({
-          data: {
-            namaKegiatan,
-            kategori,
-            deskripsi,
-            tanggalKegiatan: tanggalKegiatan ? new Date(tanggalKegiatan) : new Date(),
-            gdriveFolderId: folderId,
-            gdriveFolderUrl: folderUrl,
-            petugasId: authUser?.id || null,
-            foto: {
-              create: uploadedPhotosData,
+
+        let folderId: string | null | undefined
+        let folderUrl: string | null | undefined
+
+        if (kegiatan) {
+          // Jika sudah ada, gunakan ID & URL folder yang sudah ada
+          folderId = kegiatan.gdriveFolderId
+          folderUrl = kegiatan.gdriveFolderUrl
+        } else {
+          // Jika belum ada, buat folder baru di Google Drive
+          const gdriveFolder = await GDriveService.createFolder(namaKegiatan)
+          folderId = gdriveFolder.folderId
+          folderUrl = gdriveFolder.webViewLink
+        }
+
+        // 2. Upload file-file foto ke Google Drive (ke folder yang sesuai)
+        const uploadedPhotosData: any[] = []
+
+        for (const file of filesToUpload) {
+          if (file.tmpPath) {
+            const mimeType = file.headers['content-type'] || 'image/jpeg'
+            const fileName = file.clientName || `foto-${Date.now()}.jpg`
+
+            const uploaded = await GDriveService.uploadFile(
+              file.tmpPath,
+              fileName,
+              mimeType,
+              folderId!
+            )
+
+            uploadedPhotosData.push({
+              namaFile: fileName,
+              gdriveFileId: uploaded.fileId,
+              viewUrl: uploaded.viewUrl,
+              downloadUrl: uploaded.webViewLink,
+            })
+          }
+        }
+
+        // 3. Simpan relasi foto ke Database
+        if (kegiatan) {
+          // Jika kegiatan lama: Tambahkan foto baru ke kegiatan tersebut
+          kegiatan = await prisma.kegiatanDokumentasi.update({
+            where: { id: kegiatan.id },
+            data: {
+              deskripsi: deskripsi || kegiatan.deskripsi,
+              foto: {
+                create: uploadedPhotosData,
+              },
             },
-          },
-          include: {
-            foto: true,
-          },
+            include: {
+              foto: true,
+            },
+          })
+        } else {
+          // Jika kegiatan baru: Buat record baru
+          kegiatan = await prisma.kegiatanDokumentasi.create({
+            data: {
+              namaKegiatan,
+              kategori,
+              deskripsi,
+              tanggalKegiatan: tanggalKegiatan ? new Date(tanggalKegiatan) : new Date(),
+              gdriveFolderId: folderId,
+              gdriveFolderUrl: folderUrl,
+              petugasId: authUser?.id || null,
+              foto: {
+                create: uploadedPhotosData,
+              },
+            },
+            include: {
+              foto: true,
+            },
+          })
+        }
+
+// 4. Set thumbnailFotoId jika belum ada (menggunakan ID foto pertama)
+        if (!kegiatan.thumbnailFotoId) {
+          const firstPhoto = await prisma.fotoDokumentasi.findFirst({
+            where: { kegiatanId: kegiatan.id },
+            orderBy: { createdAt: 'asc' },
+          })
+
+          if (firstPhoto) {
+            kegiatan = await prisma.kegiatanDokumentasi.update({
+              where: { id: kegiatan.id },
+              data: {
+                thumbnailFotoId: firstPhoto.id,
+              },
+              include: {
+                foto: true,
+              },
+            })
+          }
+        }
+
+        return response.created({
+          success: true,
+          message: 'Berhasil mengunggah dokumentasi ke folder kegiatan',
+          data: kegiatan,
+        })
+      } catch (error: any) {
+        return response.internalServerError({
+          success: false,
+          message: 'Gagal mengunggah dokumentasi ke Google Drive',
+          error: error.message,
         })
       }
-
-      return response.created({
-        success: true,
-        message: 'Berhasil mengunggah dokumentasi ke folder kegiatan',
-        data: kegiatan,
-      })
-    } catch (error: any) {
-      return response.internalServerError({
-        success: false,
-        message: 'Gagal mengunggah dokumentasi ke Google Drive',
-        error: error.message,
-      })
     }
-  }
 
  /**
    * Update info kegiatan (nama, deskripsi, tanggal)
@@ -329,55 +361,66 @@ export default class DokumentasiController {
    * GET /api/v1/public/galeri
    * Public Endpoint (Landing Page, Tanpa Auth)
    */
-  public async publicGallery({ response }: HttpContext) {
-    try {
-      const galeri = await prisma.kegiatanDokumentasi.findMany({
-        where: { isPublic: true },
-        orderBy: { tanggalKegiatan: 'desc' },
-        include: {
-          foto: {
-            take: 1, // Fallback ambil 1 foto teratas jika thumbnail tidak diset spesifik
+  public async publicGallery({ request, response }: HttpContext) {
+      try {
+        const { kategori, search } = request.qs()
+
+        const listDokumentasi = await prisma.kegiatanDokumentasi.findMany({
+          where: {
+            isPublic: true,
+            deletedAt: null,
+            ...(kategori && { kategori }),
+            ...(search && {
+              OR: [
+                { namaKegiatan: { contains: search } },
+                { deskripsi: { contains: search } },
+              ],
+            }),
           },
-        },
-      })
+          include: {
+            foto: {
+              select: {
+                id: true,
+                namaFile: true,
+                viewUrl: true,
+                downloadUrl: true,
+              },
+            },
+          },
+          orderBy: {
+            tanggalKegiatan: 'desc',
+          },
+        })
 
-      // Format response agar frontend landing page mudah render
-      const formatted = await Promise.all(
-        galeri.map(async (kegiatan) => {
-          let coverFoto = kegiatan.foto[0] || null
-
-          if (kegiatan.thumbnailFotoId) {
-            const specificCover = await prisma.fotoDokumentasi.findUnique({
-              where: { id: kegiatan.thumbnailFotoId },
-            })
-            if (specificCover) coverFoto = specificCover
-          }
+        // Format response agar frontend mudah membaca foto sampul & galeri
+        const formattedData = listDokumentasi.map((item) => {
+          const sampul =
+            item.foto.find((f) => f.id === item.thumbnailFotoId) || item.foto[0] || null
 
           return {
-            id: kegiatan.id,
-            namaKegiatan: kegiatan.namaKegiatan,
-            deskripsi: kegiatan.deskripsi,
-            tanggalKegiatan: kegiatan.tanggalKegiatan,
-            folderGdriveUrl: kegiatan.gdriveFolderUrl,
-            cover: coverFoto
-              ? {
-                  id: coverFoto.id,
-                  namaFile: coverFoto.namaFile,
-                  viewUrl: coverFoto.viewUrl,
-                }
-              : null,
+            id: item.id,
+            namaKegiatan: item.namaKegiatan,
+            kategori: item.kategori,
+            tanggalKegiatan: item.tanggalKegiatan,
+            deskripsi: item.deskripsi,
+            fotoSampul: sampul?.viewUrl || null,
+            totalFoto: item.foto.length,
+            galeri: item.foto, // Berisi semua foto untuk modal/halaman detail
           }
         })
-      )
 
-      return response.ok({
-        success: true,
-        message: 'Berhasil mengambil galeri kegiatan publik',
-        data: formatted,
-      })
-    } catch (error: any) {
-      return response.internalServerError({ success: false, error: error.message })
-    }
+        return response.ok({
+          success: true,
+          message: 'Berhasil mengambil galeri kegiatan publik',
+          data: formattedData,
+        })
+      } catch (error: any) {
+        return response.internalServerError({
+          success: false,
+          message: 'Gagal mengambil galeri publik',
+          error: error.message,
+        })
+      }
   }
 
 /**
