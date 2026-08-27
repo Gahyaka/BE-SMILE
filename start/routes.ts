@@ -78,6 +78,7 @@ router.group(() => {
       router.put('/siswa/:id', [SiswaController, 'update'])
       router.delete('/siswa/:id', [SiswaController, 'destroy'])
 
+      router.delete('/users/:id', [AuthController, 'destroy'])
 
       router.put('/users/:id/reset-password', [AuthController, 'resetPassword'])
       router.patch('/dokumentasi/:id/toggle-public', [DokumentasiController, 'togglePublicGallery'])

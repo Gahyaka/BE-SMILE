@@ -233,48 +233,110 @@ export default class AuthController {
  * PUT /api/v1/users/:id/reset-password
  * Khusus ADMIN_ADMINISTRASI untuk mereset/mengubah password user lain
  */
-public async resetPassword({ params, request, response }: HttpContext) {
-  try {
-    const { newPassword } = request.only(['newPassword'])
+  public async resetPassword({ params, request, response }: HttpContext) {
+    try {
+      const { newPassword } = request.only(['newPassword'])
 
-    if (!newPassword || newPassword.length < 6) {
-      return response.badRequest({
+      if (!newPassword || newPassword.length < 6) {
+        return response.badRequest({
+          success: false,
+          message: 'Password baru wajib diisi dan minimal 6 karakter',
+        })
+      }
+
+      // Cek keberadaan user target
+      const targetUser = await prisma.user.findUnique({
+        where: { id: params.id },
+      })
+
+      if (!targetUser) {
+        return response.notFound({
+          success: false,
+          message: 'User tidak ditemukan',
+        })
+      }
+
+      // Hash password baru
+      const hashedPassword = await bcrypt.hash(newPassword, 10)
+
+      // Update password di database
+      await prisma.user.update({
+        where: { id: params.id },
+        data: { password: hashedPassword },
+      })
+
+      return response.ok({
+        success: true,
+        message: `Berhasil mengubah password untuk user @${targetUser.username}`,
+      })
+    } catch (error: any) {
+      return response.internalServerError({
         success: false,
-        message: 'Password baru wajib diisi dan minimal 6 karakter',
+        message: 'Gagal mereset password user',
+        error: error.message,
       })
     }
-
-    // Cek keberadaan user target
-    const targetUser = await prisma.user.findUnique({
-      where: { id: params.id },
-    })
-
-    if (!targetUser) {
-      return response.notFound({
-        success: false,
-        message: 'User tidak ditemukan',
-      })
-    }
-
-    // Hash password baru
-    const hashedPassword = await bcrypt.hash(newPassword, 10)
-
-    // Update password di database
-    await prisma.user.update({
-      where: { id: params.id },
-      data: { password: hashedPassword },
-    })
-
-    return response.ok({
-      success: true,
-      message: `Berhasil mengubah password untuk user @${targetUser.username}`,
-    })
-  } catch (error: any) {
-    return response.internalServerError({
-      success: false,
-      message: 'Gagal mereset password user',
-      error: error.message,
-    })
   }
-}
+/**
+   * DELETE /api/v1/users/:id
+   */
+  public async destroy({ params, request, response }: HttpContext) {
+    try {
+      const authUser = (request as any).authUser
+      const targetUserId = params.id
+
+      // 1. Validasi Keberadaan User Target
+      const targetUser = await prisma.user.findUnique({
+        where: { id: targetUserId },
+      })
+
+      if (!targetUser) {
+        return response.notFound({
+          success: false,
+          message: 'User tidak ditemukan',
+        })
+      }
+
+      // 2. Proteksi 1: Tidak boleh menghapus akun sendiri
+      if (targetUser.id === authUser.id) {
+        return response.forbidden({
+          success: false,
+          message: 'Anda tidak dapat menghapus akun Anda sendiri',
+        })
+      }
+
+      // 3. Proteksi 2: Tidak boleh menghapus sesama role ADMIN_ADM
+      if (targetUser.role === 'ADMIN_ADMINISTRASI') {
+        return response.forbidden({
+          success: false,
+          message: 'User dengan hak akses ADMIN_ADM tidak dapat dihapus',
+        })
+      }
+
+      // 4. Eksekusi Hapus User
+      await prisma.user.delete({
+        where: { id: targetUserId },
+      })
+
+      return response.ok({
+        success: true,
+        message: `User '${targetUser.nama || targetUser.username}' (${targetUser.role}) berhasil dihapus`,
+      })
+    } catch (error: any) {
+      // Penanganan jika ada foreign key constraint (misal: user terkait data transaksi/kegiatan yang restricted)
+      if (error.code === 'P2003') {
+        return response.badRequest({
+          success: false,
+          message: 'Gagal menghapus user karena masih terhubung dengan data aktif lain (kelas/transaksi)',
+          error: error.message,
+        })
+      }
+
+      return response.internalServerError({
+        success: false,
+        message: 'Gagal menghapus user',
+        error: error.message,
+      })
+    }
+  }
 }

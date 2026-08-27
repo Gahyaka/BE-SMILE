@@ -228,6 +228,12 @@ const routes = {
     tokens: [{"old":"/api/v1/siswa/:id","type":0,"val":"api","end":""},{"old":"/api/v1/siswa/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/siswa/:id","type":0,"val":"siswa","end":""},{"old":"/api/v1/siswa/:id","type":1,"val":"id","end":""}],
     types: placeholder as Registry['siswa.destroy']['types'],
   },
+  'auth.destroy': {
+    methods: ["DELETE"],
+    pattern: '/api/v1/users/:id',
+    tokens: [{"old":"/api/v1/users/:id","type":0,"val":"api","end":""},{"old":"/api/v1/users/:id","type":0,"val":"v1","end":""},{"old":"/api/v1/users/:id","type":0,"val":"users","end":""},{"old":"/api/v1/users/:id","type":1,"val":"id","end":""}],
+    types: placeholder as Registry['auth.destroy']['types'],
+  },
   'auth.reset_password': {
     methods: ["PUT"],
     pattern: '/api/v1/users/:id/reset-password',

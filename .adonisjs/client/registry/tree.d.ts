@@ -9,6 +9,7 @@ export interface ApiDefinition {
     logout: typeof routes['auth.logout']
     index: typeof routes['auth.index']
     register: typeof routes['auth.register']
+    destroy: typeof routes['auth.destroy']
     resetPassword: typeof routes['auth.reset_password']
   }
   dokumentasi: {
