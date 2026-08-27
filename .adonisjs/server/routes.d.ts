@@ -41,6 +41,7 @@ export type ScannedRoutes = {
     'siswa.store': { paramsTuple?: []; params?: {} }
     'siswa.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'siswa.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'auth.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'auth.reset_password': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'dokumentasi.toggle_public_gallery': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'pembayaran_spp_les.store': { paramsTuple?: []; params?: {} }
@@ -124,6 +125,7 @@ export type ScannedRoutes = {
     'dokumentasi.destroy_foto': { paramsTuple: [ParamValue]; params: {'fotoId': ParamValue} }
     'kelas.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'siswa.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'auth.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'pembayaran_spp_les.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'tabungan.destroy_mutasi': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }

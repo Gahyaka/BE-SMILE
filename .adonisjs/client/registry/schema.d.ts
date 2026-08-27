@@ -451,6 +451,18 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/siswas_controller').default['destroy']>>>
     }
   }
+  'auth.destroy': {
+    methods: ["DELETE"]
+    pattern: '/api/v1/users/:id'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { id: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/auth_controller').default['destroy']>>>
+    }
+  }
   'auth.reset_password': {
     methods: ["PUT"]
     pattern: '/api/v1/users/:id/reset-password'
