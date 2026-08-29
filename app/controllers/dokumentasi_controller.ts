@@ -48,13 +48,13 @@ export default class DokumentasiController {
       const dokumentasi = await prisma.kegiatanDokumentasi.findUnique({
         where: { id: params.id },
         include: {
-          fotoKegiatan: {
+          foto: {
             select: {
               id: true,
               namaFile: true,
-              fileId: true,
-              urlFoto: true,
-              isSampul: true,
+              gdriveFileId: true,
+              viewUrl: true,
+              downloadUrl: true,
               createdAt: true,
             },
             orderBy: {
